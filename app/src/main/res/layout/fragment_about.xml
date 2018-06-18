@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/app_name"
+                android:src="@mipmap/ic_launcher"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/nameAndVersion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_standard"
+                        tools:text="B-Town 0.0.1"/>
+
+                    <TextView
+                        android:id="@+id/authorAndLicence"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_standard"
+                        android:text="@string/author"/>
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/shareApp"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/shared_string_share"
+                    android:drawableTop="@drawable/ic_share"
+                    android:text="@string/shared_string_share"
+                    android:textColor="@color/md_grey_700"
+                    android:textSize="12sp"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/aboutTextView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="fill_vertical|fill_horizontal|fill"
+            android:clickable="true"
+            android:focusable="true"
+            android:linksClickable="true"
+            android:textColorLink="@color/md_red_700"
+            android:padding="10dp"
+            android:text="@string/aboutSettingsDescription"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/margin_standard"
+            android:weightSum="3">
+
+            <Button
+                android:id="@+id/rateButton"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/shared_string_rate"
+                android:drawableTop="@drawable/ic_rate"
+                android:text="@string/shared_string_rate"
+                android:textColor="@color/md_grey_700"
+                android:textSize="12sp"
+                />
+
+            <include layout="@layout/divider_faded_vert"/>
+
+            <Button
+                android:id="@+id/feedbackButton"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/shared_string_feedback"
+                android:drawableTop="@drawable/ic_comment"
+                android:text="@string/shared_string_feedback"
+                android:textColor="@color/md_grey_700"
+                android:textSize="12sp"
+                />
+
+            <include layout="@layout/divider_faded_vert"/>
+
+            <Button
+                android:id="@+id/websiteButton"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/visit_website"
+                android:drawableTop="@drawable/ic_web"
+                android:text="@string/visit_website"
+                android:textColor="@color/md_grey_700"
+                android:textSize="12sp"
+                />
+
+            <include
+                layout="@layout/divider_faded_vert"/>
+
+            <Button
+                android:id="@+id/donateButton"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/shared_string_donate"
+                android:drawableTop="@drawable/ic_donate"
+                android:text="@string/shared_string_donate"
+                android:textColor="@color/md_grey_700"
+                android:textSize="12sp"
+                android:visibility="gone"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

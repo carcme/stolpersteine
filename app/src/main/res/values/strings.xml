@@ -1,0 +1,126 @@
+<resources>
+    <string name="app_name">Stolpersteine</string>
+    <string name="app_name_version">Stolpersteine %1$s</string>
+
+    <string name="rationale_locaiton">B-Town works best if it knows where you are.</string>
+    <string name="rationale_storage">B-Town needs to store map tiles.</string>
+    <string name="permission_rejected_msg">B-Town really needs those permissions for the map functions. Hope you change your mind and grant the permissions another time.</string>
+    <string name="enable_gps_request">Please enable the device GPS</string>
+    <string name="no_gps">No GPS</string>
+    <string name="rationale_camera">You need to grant accto your camera so you can take pictures.</string>
+
+    <string name="error_no_maps_app">Could not find any apps that provide directions.</string>
+
+
+    <string name="shared_string_about">About</string>
+    <string name="shared_string_add_comment">Add comment</string>
+    <string name="shared_string_address">Address</string>
+    <string name="shared_string_donate">Donate</string>
+    <string name="shared_string_error">"Error!"</string>
+    <string name="shared_string_feedback">Feedback</string>
+    <string name="shared_string_phone">Phone</string>
+    <string name="shared_string_rate">Rate</string>
+    <string name="shared_string_route">Route</string>
+    <string name="shared_string_save">Save</string>
+    <string name="shared_string_send">Send</string>
+    <string name="shared_string_send_to">Send To</string>
+    <string name="shared_string_settings">Settings</string>
+    <string name="shared_string_share">Share</string>
+    <string name="shared_string_success">Success</string>
+    <string name="shared_string_thankyou">Thank you!</string>
+    <string name="shared_string_website">Website</string>
+
+    <string name="search_all_hint">Type to search all</string>
+
+
+    <string name="stolperstein_image">Stolperstein Image</string>
+
+    <string name="error_image_load">There was an error getting the image</string>
+    <string name="error_translate">There was an error getting the translation</string>
+
+
+
+    <!-- SETTINGS -->
+
+    <string name="feedbackEmail" translatable="false">carcmedev@gmail.com</string>
+    <string name="feedbackEmailSubject" translatable="false">carcmedev@gmail.com</string>
+
+    <string name="website" translatable="false">https://www.stolpersteine-berlin.de</string>
+    <string name="bugtracker" translatable="false">https://github.com/carcme/btown_mvp/issues</string>
+
+    <string name="author">© 2018 Carc Me Dev</string>
+    <string name="licence">Free Software License: GPLv3</string>
+
+
+    <string name="aboutSettingsDescription"><![CDATA[
+
+<h3>Stolperstein?</h3>
+<p>The stumbling blocks are an art project by Gunter Demnig. Started in 1996, there are now more than 67,000 stumbling
+blocks laid in 22 countries, making it the world\'s largest decentralized memorial.</p>
+
+<p> They commemorate victims of the Holocaust at the last freely chosen place of residency prior to their expulsion and extermination.</p>
+
+<h3>Origin of the Name</h3>
+
+<p>The German term Stolperstein can mean \"potential problem\" and the term \"stumble across something\", in German and English,
+can also mean \"to find by chance\". Thus, the term Stolperstein invokes an antisemitic remark of the past, but at the same time
+intends to provoke thoughts about a serious issue.</p>
+
+<p>Stolpersteine are not prominently placed, rather discovered by chance and only recognisable when passing at close distance.
+The app aims to show you where the Stumbling Blocks are and some information about the person they commemorate.</p>
+
+]]></string>
+
+    <string name="aboutSettingsIssueReporting">
+    <![CDATA[
+<h3>Issues</h3>
+<p>If you find any issues, please report them at <a href="%1$s">the issue tracker</a>.</p>
+]]>
+</string>
+    <string name="aboutSettingsBugtracker" translatable="false">https://github.com/carcme/btown_mvp/issues</string>
+
+
+    <string name="error_playstore_not_found">Couldn\'t find PlayStore on this device</string>
+
+
+    <string name="tab_libraries">Libraries</string>
+    <string name="tab_devs">Developers</string>
+
+
+    <string name="visit_website">Website</string>
+
+    <string name="maintainer">Maintainer</string>
+    <string name="contributors">Contributors</string>
+    <string name="translators">Translators</string>
+
+
+    <!--DONATE-->
+    <string name="text_donate_title">Donate</string>
+    <string name="text_donate_subtitle">Show some love</string>
+    <string name="text_donate_progress_title">Connecting&#8230;</string>
+    <string name="text_donate_progress_message">This can take some time. Thanks for your patience</string>
+    <string name="text_donate_cancel">Thanks you, really means a lot and allows me to keep making B-Town better.\n\nIf you could rate us on the Play Store, that would be great.</string>
+    <string name="text_donate_thanks">Thanks you for your support&#8230; come back for new tours on your next visit</string>
+
+
+
+    <!--FEEDBACK DIALOG-->
+    <string name="rating_dialog_experience">Ratings really matter… could you leave some stars?</string>
+    <string name="rating_dialog_maybe_later">Maybe later</string>
+    <string name="rating_dialog_never">Never</string>
+    <string name="rating_dialog_feedback_title">Feedback</string>
+    <string name="rating_dialog_submit">Submit</string>
+    <string name="rating_dialog_cancel">Cancel</string>
+    <string name="rating_dialog_suggestions">Suggest what you want and we\'ll work on it!</string>
+
+    <string name="ratings_request_title">Love to know what you think of the app</string>
+    <string name="feedback_request_title">Send Feedback</string>
+    <string name="feedback_request_hint">Tell us where we can improve&#8230;</string>
+    <string name="feedbackChooserTitle">Send Feedback Via</string>
+    <string name="about_lib_attr">
+        <![CDATA[
+        All information provide by <a href src=\"https://www.stolpersteine-berlin.de\">stolpersteine-berlin.de</a>
+        ]]></string>
+
+
+</resources>

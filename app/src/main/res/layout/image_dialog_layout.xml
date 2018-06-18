@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:background="@drawable/background_glide_placeholder"
+                android:animateLayoutChanges="true">
+
+    <me.carc.stolpersteine.common.views.TouchImageView
+        android:id="@+id/imageDialogImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="center"/>
+
+    <ProgressBar
+        android:id="@+id/imageLoadProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/tintStandard"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/textContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hapticFeedbackEnabled="true"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/imageTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="serif"
+                android:textColor="@color/md_white_1000"
+                android:textSize="18sp"
+                tools:text="@tools:sample/lorem" />
+
+            <TextView
+                android:id="@+id/imageSubTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/md_white_1000"
+                android:paddingTop="10dp"
+                android:textSize="14sp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                tools:visibility="visible"
+                tools:text="@tools:sample/lorem" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/imageMoreBtn"
+            style="@style/Widget.AppCompat.ActionButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="bottom"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/ic_more"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

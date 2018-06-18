@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="toggle_animation_duration">300</integer>
+    <integer name="gallery_alpha_duration">200</integer>
+    <integer name="anim_alpha_duration_millis">300</integer>
+
+    <integer name="venue_photo_grid_columns">3</integer>
+    <integer name="stroke_width">4</integer>
+
+
+</resources>

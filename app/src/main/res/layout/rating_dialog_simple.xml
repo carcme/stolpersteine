@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:background="@drawable/rate_rounded_rectangle">
+
+        <TextView
+                android:id="@+id/dlg_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                android:textColor="@color/md_black_1000"
+                android:textSize="18sp"
+                tools:text="Message Title"/>
+
+        <TextView
+                android:id="@+id/dlg_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/dlg_title"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/rate_edittext_background"
+                android:gravity="top"
+                android:padding="10dp"
+                android:textColorHint="@color/md_grey_400"
+                android:text="Add your message here"/>
+
+        <LinearLayout
+                android:id="@+id/dlg_feedback_buttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/dlg_message"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/dlg_btn_negative"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:padding="15dp"
+                android:textSize="15sp"
+                tools:text="Negative"
+                android:focusable="true"/>
+
+            <TextView
+                android:id="@+id/dlg_btn_neutral"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:padding="15dp"
+                android:textSize="15sp"
+                tools:text="Neutral"
+                android:focusable="true"/>
+
+            <TextView
+                android:id="@+id/dlg_btn_positive"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:padding="15dp"
+                android:textSize="15sp"
+                tools:text="Positive"
+                android:focusable="true"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</ScrollView>

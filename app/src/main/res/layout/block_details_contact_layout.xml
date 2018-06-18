@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/viewerDirections"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:contentDescription="@string/shared_string_route"
+        android:drawableTop="@drawable/ic_google_maps"
+        android:text="@string/shared_string_route"
+        android:textColor="@color/md_grey_900"/>
+
+    <include
+        android:id="@+id/venueRouteDiv"
+        layout="@layout/divider_faded_vert"/>
+
+    <Button
+        android:id="@+id/viewerShare"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:contentDescription="@string/shared_string_share"
+        android:drawableTop="@drawable/ic_share"
+        android:text="@string/shared_string_share"
+        android:textColor="@color/md_grey_900"
+        />
+
+</LinearLayout>

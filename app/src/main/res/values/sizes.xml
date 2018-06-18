@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="tiny_list_text_size">12sp</dimen>
+    <dimen name="small_list_text_size">14sp</dimen>
+    <dimen name="default_list_text_size">16sp</dimen>
+    <dimen name="large_list_text_size">19sp</dimen>
+
+
+    <dimen name="text_size_header_large">36sp</dimen>
+    <dimen name="item_text_size">18sp</dimen>
+
+
+    <dimen name="carc_item_title">16sp</dimen>
+    <dimen name="carc_item_text">14sp</dimen>
+
+
+</resources>

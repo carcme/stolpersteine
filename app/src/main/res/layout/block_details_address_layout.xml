@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/addressLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/addressMap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:scaleType="fitEnd"
+                tools:src="@drawable/static_map"/>
+
+            <ImageView
+                android:id="@+id/venueMapOverlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:scaleType="centerCrop"
+                android:src="@drawable/gradient_overlay_map"/>
+
+        </FrameLayout>
+
+        <RelativeLayout
+            android:id="@+id/addressContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:layout_marginBottom="@dimen/margin_standard"
+            android:layout_marginStart="@dimen/margin_standard">
+
+            <TextView
+                android:id="@+id/addressTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fullname"
+                android:drawableStart="@drawable/ic_block_attribution"
+                android:drawablePadding="@dimen/margin_small"
+                android:fontFamily="serif"
+                android:text="@string/shared_string_address"
+                android:textColor="@color/md_grey_700"
+                android:textSize="@dimen/large_list_text_size"
+                />
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/addressTitle"
+                android:layout_marginStart="@dimen/margin_big"
+                android:textColor="@color/md_grey_700"
+                android:textSize="@dimen/small_list_text_size"
+                tools:text="Ulricistraße 32\nWannsee\nSteglitz-Zehlendorf\n12159\nBerlin\n"
+                />
+
+
+
+            <TextView
+                android:id="@+id/born"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/address"
+                android:drawableStart="@drawable/ic_block_attribution"
+                android:drawablePadding="@dimen/margin_small"
+                android:textColor="@color/md_grey_700"
+                android:textSize="@dimen/small_list_text_size"
+                android:visibility="invisible"
+                tools:visibility="visible"
+                tools:text="BORN: 01/18/1880 in Zimmersrode"
+                />
+
+            <TextView
+                android:id="@+id/occupation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/born"
+                android:textColor="@color/md_grey_700"
+                android:drawableStart="@drawable/ic_block_attribution"
+                android:drawablePadding="@dimen/margin_small"
+                android:textSize="@dimen/small_list_text_size"
+                android:visibility="invisible"
+                tools:visibility="visible"
+                tools:text="OCCUPATION: Betreiber eines Viehhandels"
+                />
+
+            <TextView
+                android:id="@+id/deported"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/occupation"
+                android:drawableStart="@drawable/ic_block_attribution"
+                android:drawablePadding="@dimen/margin_small"
+                android:textColor="@color/md_grey_700"
+                android:textSize="@dimen/small_list_text_size"
+                android:visibility="invisible"
+                tools:visibility="visible"
+                tools:text="DEPORTATION:  on the 26th of October 1942 to Riga"
+                />
+
+            <TextView
+                android:id="@+id/murdered"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/deported"
+                android:drawableStart="@drawable/ic_block_attribution"
+                android:drawablePadding="@dimen/margin_small"
+                android:textColor="@color/md_grey_700"
+                android:textSize="@dimen/small_list_text_size"
+                android:visibility="invisible"
+                tools:visibility="visible"
+                tools:text="MURDERED: 10/29/1942 in Riga"
+                />
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

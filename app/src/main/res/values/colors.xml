@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/md_brown_700</color>
+    <color name="colorPrimaryDark">@color/md_brown_900</color>
+    <!--<color name="colorAccent">#DDB617</color>-->
+    <color name="colorAccent">@color/md_yellow_700</color>
+
+
+    <color name="temp1">#ff7700</color>
+    <color name="temp2">#ffff00</color>
+    <color name="temp3">#ffff00</color>
+
+    <color name="ratePositiveBtnBgColor">@color/md_white_1000</color>
+    <color name="rateNegativeBtnBgColor">@color/md_white_1000</color>
+
+    <color name="dialog_primary_text_color">#212121</color>
+    <color name="dialog_secondary_text_color">#757575</color>
+    <color name="ratePositiveBtnTextColor">#669900</color>
+    <color name="rateNegativeBtnTextColor">#C00</color>
+
+
+    <color name="transparent">#00000000</color>
+    <color name="tintLight">#22000000</color>
+    <color name="fabColorAlmostClear">#33000000</color>
+    <color name="tintTest">#88795548</color>
+    <color name="tintStandard">#80000000</color>
+    <color name="tintDark">#A0000000</color>
+
+</resources>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="pref_key_location"
+        android:title="@string/string_todo">
+
+        <CheckBoxPreference
+            android:width="24dp"
+            android:height="24dp"
+            android:defaultValue="true"
+            android:key="pref_key_use_gps"
+            android:summary="@string/string_summary"
+            android:title="@string/string_title" />
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        android:key="pref_key_display"
+        android:title="@string/string_todo">
+
+        <CheckBoxPreference
+            android:width="24dp"
+            android:height="24dp"
+            android:defaultValue="true"
+            android:key="pref_key_tours"
+            android:summary="@string/string_summary"
+            android:title="@string/string_title" />
+
+<!--
+        <ListPreference
+            android:alertDialogTheme="@style/DialogTheme"
+            android:defaultValue="@string/pref_language_value_default"
+            android:entries="@array/pref_language_options"
+            android:entryValues="@array/pref_language_values"
+            android:key="pref_key_language"
+            android:negativeButtonText="@android:string/cancel"
+            android:summary="%s"
+            android:title="@string/pref_language_title" />
+-->
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
