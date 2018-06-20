@@ -32,16 +32,14 @@ public class StolpersteineViewModel extends AndroidViewModel {
         return mRepository.getPagedList();
     }
 
+    public LiveData<PagedList<Stolpersteine>> getLocalPagedList(BoundingBox box) {
+        return mRepository.loadLocalPagedList(box.getLatSouth(), box.getLatNorth(), box.getLonWest(), box.getLonEast());
+    }
+
     public LiveData<PagedList<Stolpersteine>> search(String search) {
         return mRepository.getSearchList(search);
     }
 
-
-    public LiveData<List<Stolpersteine>> getAroundLocation(Double lat1, Double lat2, Double lon1, Double lon2) {
-        return mRepository.getAroundLocation(lat1, lat2, lon1, lon2);
-    }
-
-    // TODO: 13/06/2018  check you've got the lat long
     public LiveData<List<Stolpersteine>> getAroundLocation(BoundingBox box) {
         return mRepository.getAroundLocation(box.getLatSouth(), box.getLatNorth(), box.getLonWest(), box.getLonEast());
     }

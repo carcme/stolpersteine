@@ -1,19 +1,18 @@
 package me.carc.stolpersteine.activities.map;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.osmdroid.events.MapEventsReceiver;
@@ -36,6 +35,7 @@ import me.carc.stolpersteine.R;
 import me.carc.stolpersteine.activities.PermissionActivity;
 import me.carc.stolpersteine.activities.base.MvpBaseActivity;
 import me.carc.stolpersteine.activities.map.overlays.FastPointOverlay;
+import me.carc.stolpersteine.activities.map.overlays.LabelledGeoPoint;
 import me.carc.stolpersteine.activities.settings.SettingsActivity;
 import me.carc.stolpersteine.activities.viewer.BlockViewerActivity;
 import me.carc.stolpersteine.common.C;
@@ -48,14 +48,8 @@ import me.carc.stolpersteine.data.db.AppDatabase;
 import me.carc.stolpersteine.data.db.blocks.StolpersteineDao;
 import me.carc.stolpersteine.data.db.blocks.StolpersteineViewModel;
 import me.carc.stolpersteine.data.remote.model.Stolpersteine;
-import me.carc.stolpersteine.data.translate.ResponseTranslate;
-import me.carc.stolpersteine.data.translate.ResultTranslate;
-import me.carc.stolpersteine.data.translate.TranslateApi;
-import me.carc.stolpersteine.data.translate.TranslateApiServiceProvider;
 import me.carc.stolpersteine.fragments.BlockListDialogFragment;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import me.carc.stolpersteine.fragments.settings.SendFeedback;
 
 /**
  * Main Screen used to show stolpersteine locaitons
@@ -63,14 +57,12 @@ import retrofit2.Response;
  * Created by bamptonm on 08/06/2018.
  */
 
-public class MapActivity extends MvpBaseActivity implements MapMvpView, MapEventsReceiver {
+public class MapActivity extends MvpBaseActivity implements MapMvpView, MapEventsReceiver, FastPointOverlay.OnPointClicked {
     private static final String TAG = MapActivity.class.getName();
-    private static final int MAX_VALID_ACCRACY = 100;
 
     @Inject MapPresenter mPresenter;
     @Inject SharedPrefsHelper mSharePrefs;
     @Inject DataManager mDataMngr;
-//    @Inject BTownFusedLocation fusedLocation;
 
     private FastPointOverlay mPointsOverlay;
 
@@ -80,10 +72,14 @@ public class MapActivity extends MvpBaseActivity implements MapMvpView, MapEvent
 
     private boolean disableLookups;
 
+    private Snackbar mSnackBar;
+
     private Unbinder unbinder;
 
+    @BindView(R.id.fabBase)                 CoordinatorLayout fabBase;
     @BindView(R.id.mapView)                 MapView mMap;
     @BindView(R.id.featureProgressDialog)   ProgressBar featureProgressDialog;
+    @BindView(R.id.fab_search)              FloatingActionButton fabSearch;
     @BindView(R.id.fabLocation)             FloatingActionButton fabLocation;
     @BindView(R.id.fabBack)                 FloatingActionButton fabBack;
 
@@ -103,12 +99,9 @@ public class MapActivity extends MvpBaseActivity implements MapMvpView, MapEvent
         }
 
         mViewModel = ViewModelProviders.of(this).get(StolpersteineViewModel.class);
-//        fusedLocation.setCallback(locationCallbackListener);
         mPresenter.attachView(this);
 
-
-        mPointsOverlay = new FastPointOverlay(getApplicationContext());
-
+        mPointsOverlay = new FastPointOverlay(this);
 
         Intent intent = getIntent();
         if(Commons.isNotNull(intent) && getIntent().hasExtra(BlockViewerActivity.BLOCK_DATA)) {
@@ -132,12 +125,10 @@ public class MapActivity extends MvpBaseActivity implements MapMvpView, MapEvent
     }
 
     private void getRemoteData() {
-        // TODO: 10/06/2018 does live data work with empty database?
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                if(null == AppDatabase.getDatabase(getApplicationContext()).stolpersteineDao().getAnyBlock())
-                    mPresenter.getStumblingBlocks(0);
+        Executors.newSingleThreadExecutor().execute(() -> {
+            if(null == AppDatabase.getDatabase(getApplicationContext()).stolpersteineDao().getAnyBlock()) {
+                mPresenter.getStumblingBlocks(0);
+                disableLookups = true;
             }
         });
     }
@@ -145,12 +136,16 @@ public class MapActivity extends MvpBaseActivity implements MapMvpView, MapEvent
     @Override
     protected void onResume() {
         super.onResume();
+        new SendFeedback(this, SendFeedback.TYPE_RATE, SendFeedback.SESSION_COUNT);
+        mLocationOverlay.enableMyLocation();
+        mapMoved((GeoPoint) mMap.getMapCenter());
     }
 
     @Override
     protected void onPause() {
         mDataMngr.setLastPosition((GeoPoint) mMap.getMapCenter());
         mDataMngr.setZoom((float) mMap.getZoomLevelDouble());
+        mLocationOverlay.disableMyLocation();
         super.onPause();
     }
 
@@ -160,6 +155,13 @@ public class MapActivity extends MvpBaseActivity implements MapMvpView, MapEvent
         super.onDestroy();
     }
 
+    @Override
+    public void onBackPressed() {
+        if(mSnackBar.isShown())
+            mSnackBar.dismiss();
+        else
+            super.onBackPressed();
+    }
 
     /******* VIEW CLICK EVENTS *****/
 
@@ -176,7 +178,7 @@ public class MapActivity extends MvpBaseActivity implements MapMvpView, MapEvent
 
     @OnClick(R.id.fab_search)
     void onShowBlocks() {
-        BlockListDialogFragment.showInstance(getApplicationContext(), mMap.getMapCenter());
+        BlockListDialogFragment.showInstance(getApplicationContext(), mMap.getBoundingBox());
     }
 
     @OnClick(R.id.fab_Settings)
@@ -197,67 +199,42 @@ public class MapActivity extends MvpBaseActivity implements MapMvpView, MapEvent
 
     @OnClick(R.id.fabLocation)
     void onFindLocation() {
-//        translate();
-        mPresenter.zoomToMyLocation(mLocationOverlay.getMyLocation());
-    }
-
-
-    String temp = "";
-
-    void translate() {
-
-        TranslateApi service = TranslateApiServiceProvider.get();
-
-
-        String testString = "Hello from my application. Here is the second sentence. ";
-
-
-        String[] split = testString.split("\\.", 450);
-
-        for (int i = 0; i < split.length; i++) {
-            if (!TextUtils.isEmpty(split[i]) && Character.isDigit(split[i].charAt(split[i].length() - 1))) {
-                split[i] = split[i].concat(split[++i]);
-                split[i] = "";
-
-                if(i >= split.length)
-                    break;
-            }
-        }
-
-        for (String query : split) {
-
-            if(!TextUtils.isEmpty(query)) {
-                Call<ResultTranslate> call = service.translate(query, "de|en");
-                call.enqueue(new Callback<ResultTranslate>() {
-
-                    @SuppressWarnings({"ConstantConditions"})
-                    @Override
-                    public void onResponse(@NonNull Call<ResultTranslate> call, @NonNull Response<ResultTranslate> response) {
-
-                        if (response.body() != null) {
-                            Log.d(TAG, "onResponse: ");
-                            ResponseTranslate translate = response.body().getResponseData();
-
-                            temp = temp + translate.getTranslatedText() + "\n";
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ResultTranslate> call, @NonNull Throwable t) {
-                        Log.d(TAG, "onFailure: " + t.getMessage());
-                        Commons.Toast(MapActivity.this, R.string.error_translate, Color.RED, Toast.LENGTH_LONG);
-                    }
-                });
-            }
-        }
+      mPresenter.zoomToMyLocation(mLocationOverlay.getMyLocation());
     }
 
 
 
+    /* ****** CALLBACK METHODS **** */
 
 
+    @Override
+    public void onPointClicked(final LabelledGeoPoint point, final Stolpersteine element) {
 
+        mSnackBar = Snackbar.make(fabBase, point.getLabel(), Snackbar.LENGTH_INDEFINITE);
 
+        // Hide the Snackbar textview
+        Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) mSnackBar.getView();
+        TextView textView = layout.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setVisibility(View.INVISIBLE);
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View snackView = inflater.inflate(R.layout.custom_snackbar, null);
+        ((TextView)snackView.findViewById(R.id.snackFullName)).setText(point.getLabel());
+        ((TextView)snackView.findViewById(R.id.snackAddress)).setText(point.getAddress());
+        Button btn = snackView.findViewById(R.id.viewBtn);
+        btn.setOnClickListener(v -> {
+            mSnackBar.dismiss();
+            Intent intent = new Intent(v.getContext(), BlockViewerActivity.class);
+            intent.putExtra(BlockViewerActivity.BLOCK_DATA, element);
+            v.getContext().startActivity(intent);
+        });
+
+        snackView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        layout.addView(snackView, 0);
+        layout.setPadding(0,0,0,0);
+
+        mSnackBar.show();
+    }
 
     /* ****** MVP METHODS **** */
 
@@ -299,41 +276,48 @@ public class MapActivity extends MvpBaseActivity implements MapMvpView, MapEvent
         mMap.getOverlays().add(eventsOverlay);
         mMap.getOverlays().add(mLocationOverlay);
 
-        mLocationOverlay.enableMyLocation();
-
-        Bitmap bm = ImageUtils.drawableToBitmap(ContextCompat.getDrawable(this, R.drawable.ic_navigation_no_compass));
-        mLocationOverlay.setPersonIcon(bm);
+        // Set up the direciton and standing still map icons
+        Bitmap person = ImageUtils.drawableToBitmap(ContextCompat.getDrawable(this, R.drawable.ic_navigation_no_compass));
+        Bitmap direction = ImageUtils.drawableToBitmap(ContextCompat.getDrawable(this, R.drawable.ic_navigation));
+        mLocationOverlay.setDirectionArrow(person, direction);
         mLocationOverlay.setPersonHotspot(24 * C.DENSITY * 0.5f, 24 * C.DENSITY * 0.5f);
     }
 
     @Override
     public void addBlocksToDB(final int offset, final ArrayList<Stolpersteine> list) {
         final StolpersteineDao dao = AppDatabase.getDatabase(getApplicationContext()).stolpersteineDao();
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                for (Stolpersteine item : list) {
-                    Log.d(TAG, "insert to DB:: " + item.getPerson().getLastName());
-                    dao.insert(item);
-                }
+        Executors.newSingleThreadExecutor().execute(() -> {
+            for (Stolpersteine item : list)
+                dao.insert(item);
 
-                if (list.size() == MapPresenter.REQUEST_BATCH_SIZE)
-                    mPresenter.getStumblingBlocks(offset + MapPresenter.REQUEST_BATCH_SIZE);
-            }
+            if (list.size() == MapPresenter.REQUEST_BATCH_SIZE)
+                mPresenter.getStumblingBlocks(offset + MapPresenter.REQUEST_BATCH_SIZE);
+            else
+                disableLookups = false;
+
+            runOnUiThread(() -> {
+                if(disableLookups) {
+                    Commons.Toast(MapActivity.this, R.string.updating_database, Commons.RED, Toast.LENGTH_SHORT);
+                    fabSearch.setVisibility(View.INVISIBLE);
+                } else {
+                    Commons.Toast(MapActivity.this, R.string.updated_database, Commons.GREEN, Toast.LENGTH_LONG);
+                    fabSearch.setVisibility(View.VISIBLE);
+                }
+            });
         });
    }
 
     @Override
     public void mapMoved(GeoPoint geoPoint) {
+        if(Commons.isNotNull(mSnackBar))
+            mSnackBar.dismiss();
+
         if(!disableLookups) {
             featureProgressDialog.setVisibility(View.VISIBLE);
-            mViewModel.getAroundLocation(mMap.getBoundingBox()).observe(this, new Observer<List<Stolpersteine>>() {
-                @Override
-                public void onChanged(@Nullable List<Stolpersteine> stolpersteines) {
-                    mMap.getOverlays().remove(mPointsOverlay);
-                    mPointsOverlay.addStones(mMap, stolpersteines);
-                    featureProgressDialog.setVisibility(View.GONE);
-                }
+            mViewModel.getAroundLocation(mMap.getBoundingBox()).observe(this, stolpersteines -> {
+                mMap.getOverlays().remove(mPointsOverlay);
+                mPointsOverlay.addStones(mMap, stolpersteines);
+                featureProgressDialog.setVisibility(View.GONE);
             });
         }
     }

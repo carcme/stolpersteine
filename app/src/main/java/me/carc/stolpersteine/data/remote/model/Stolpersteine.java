@@ -60,8 +60,13 @@ public class Stolpersteine implements Parcelable {
     @Embedded
     private BioImages images;
 
+    private boolean hasBiography;
 
-    public Stolpersteine(int blockId, String type, String updatedAt, String createdAt, Source source, Location location, Person person, BioImages images, String id) {
+    private int numImages;
+
+
+    public Stolpersteine(int blockId, String type, String updatedAt, String createdAt, Source source, Location location,
+                         Person person, String id, BioImages images, boolean hasBiography, int numImages) {
         this.blockId = blockId;
         this.type = type;
         this.updatedAt = updatedAt;
@@ -69,8 +74,10 @@ public class Stolpersteine implements Parcelable {
         this.source = source;
         this.location = location;
         this.person = person;
-        this.images = images;
         this.id = id;
+        this.images = images;
+        this.hasBiography = hasBiography;
+        this.numImages = numImages;
     }
 
     public int getBlockId() {
@@ -136,6 +143,20 @@ public class Stolpersteine implements Parcelable {
         this.images = images;
     }
 
+    public boolean isHasBiography() {
+        return hasBiography;
+    }
+    public void setHasBiography(boolean hasBiography) {
+        this.hasBiography = hasBiography;
+    }
+
+    public int getNumImages() {
+        return numImages;
+    }
+    public void setNumImages(int numImages) {
+        this.numImages = numImages;
+    }
+
     public static final DiffUtil.ItemCallback<Stolpersteine> DIFF_CALLBACK = new DiffUtil.ItemCallback<Stolpersteine>() {
 
         @Override
@@ -146,9 +167,12 @@ public class Stolpersteine implements Parcelable {
         @Override
         public boolean areContentsTheSame(@NonNull Stolpersteine oldStone, @NonNull Stolpersteine newStone) {
             return oldStone.getPerson().getFullName().equals(newStone.getPerson().getFullName()) &&
-                    oldStone.getLocation().getStreet().equals(newStone.getLocation().getStreet());
+                    oldStone.getLocation().getStreet().equals(newStone.getLocation().getStreet()) &&
+                    oldStone.isHasBiography() == newStone.isHasBiography() &&
+                    oldStone.getNumImages() == newStone.getNumImages();
         }
     };
+
 
     @Override
     public int describeContents() {
@@ -161,11 +185,13 @@ public class Stolpersteine implements Parcelable {
         dest.writeString(this.type);
         dest.writeString(this.updatedAt);
         dest.writeString(this.createdAt);
-        dest.writeParcelable(this.source, flags);
-        dest.writeParcelable(this.location, flags);
-        dest.writeParcelable(this.person, flags);
-        dest.writeParcelable(this.images, flags);
+        dest.writeParcelable(this.source, 0);
+        dest.writeParcelable(this.location, 0);
+        dest.writeParcelable(this.person, 0);
         dest.writeString(this.id);
+        dest.writeParcelable(this.images, 0);
+        dest.writeByte(hasBiography ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.numImages);
     }
 
     protected Stolpersteine(Parcel in) {
@@ -176,8 +202,10 @@ public class Stolpersteine implements Parcelable {
         this.source = in.readParcelable(Source.class.getClassLoader());
         this.location = in.readParcelable(Location.class.getClassLoader());
         this.person = in.readParcelable(Person.class.getClassLoader());
-        this.images = in.readParcelable(BioImages.class.getClassLoader());
         this.id = in.readString();
+        this.images = in.readParcelable(BioImages.class.getClassLoader());
+        this.hasBiography = in.readByte() != 0;
+        this.numImages = in.readInt();
     }
 
     public static final Parcelable.Creator<Stolpersteine> CREATOR = new Parcelable.Creator<Stolpersteine>() {

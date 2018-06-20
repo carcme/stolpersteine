@@ -124,6 +124,7 @@ public class MapPresenter extends MvpBasePresenter<MapMvpView> {
                 } else {
                     // already at a decent zoom level - just animate
                     mMap.getController().animateTo(geoPoint);
+                    getMvpView().mapMoved(geoPoint);
                 }
             }
         } else {
@@ -160,6 +161,9 @@ public class MapPresenter extends MvpBasePresenter<MapMvpView> {
             getMvpView().mapMoved((GeoPoint) mMap.getMapCenter());
         }
     };
+
+
+    private static int counter = 0;
     /**
      * Override the map touch listener
      */
@@ -172,18 +176,21 @@ public class MapPresenter extends MvpBasePresenter<MapMvpView> {
                     break;
 
                 case MotionEvent.ACTION_MOVE:
-                    delayedTaskHandler.removeCallbacks(mapMoveTask);
-                    delayedTaskHandler.postDelayed(mapMoveTask, GENERIC_DELAY);
-                    if (mTrackingMode) {
-                        mTrackingMode = false;
-                        getMvpView().setTrackingMode(false);
-                        bAllowReturnLocation = false;
-                        browsingLocation = null;
-                        return true;
+                    if(counter++ > 10) {   // goldilocks number
+                        delayedTaskHandler.removeCallbacks(mapMoveTask);
+                        delayedTaskHandler.postDelayed(mapMoveTask, GENERIC_DELAY);
+                        if (mTrackingMode) {
+                            mTrackingMode = false;
+                            getMvpView().setTrackingMode(false);
+                            bAllowReturnLocation = false;
+                            browsingLocation = null;
+                            return true;
+                        }
                     }
                     break;
 
                 case MotionEvent.ACTION_UP:
+                    counter = 0;
                     break;
 
                 case MotionEvent.ACTION_CANCEL:

@@ -94,7 +94,7 @@ public class AboutFragment extends Fragment {
         if(Commons.isNotNull(getActivity())) {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setAction(Intent.ACTION_SEND);
-            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
+            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subject));
             intent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=" + getActivity().getPackageName());
             intent.setType("text/plain");
             startActivity(Intent.createChooser(intent, getString(R.string.shared_string_share)));
@@ -103,12 +103,12 @@ public class AboutFragment extends Fragment {
 
     @OnClick(R.id.rateButton)
     void rate() {
-        new SendFeedback(getActivity(), SendFeedback.TYPE_RATE);
+        new SendFeedback(getActivity(), SendFeedback.TYPE_RATE, SendFeedback.SHOW_RATE_NOW);
     }
 
     @OnClick(R.id.feedbackButton)
     void feebback() {
-        new SendFeedback(getActivity(), SendFeedback.TYPE_FEEDBACK);
+        new SendFeedback(getActivity(), SendFeedback.TYPE_FEEDBACK, SendFeedback.IGNORE_VALUE);
     }
 
     @OnClick(R.id.donateButton)

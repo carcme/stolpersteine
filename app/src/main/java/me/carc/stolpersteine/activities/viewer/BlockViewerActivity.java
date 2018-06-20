@@ -5,12 +5,12 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
@@ -23,7 +23,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,12 +42,14 @@ import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import me.carc.stolpersteine.App;
 import me.carc.stolpersteine.BuildConfig;
 import me.carc.stolpersteine.R;
 import me.carc.stolpersteine.activities.base.MvpBaseActivity;
 import me.carc.stolpersteine.activities.map.MapActivity;
 import me.carc.stolpersteine.activities.viewer.adapters.SectionsCard;
 import me.carc.stolpersteine.activities.viewer.adapters.SectionsRecyclerAdapter;
+import me.carc.stolpersteine.common.C;
 import me.carc.stolpersteine.common.Commons;
 import me.carc.stolpersteine.common.utils.AndroidUtils;
 import me.carc.stolpersteine.common.utils.IntentUtils;
@@ -59,7 +60,7 @@ import me.carc.stolpersteine.data.SharedPrefsHelper;
 import me.carc.stolpersteine.data.db.blocks.StolpersteineViewModel;
 import me.carc.stolpersteine.data.remote.bio.BioImages;
 import me.carc.stolpersteine.data.remote.bio.Biography;
-import me.carc.stolpersteine.data.remote.bio.LinksParser;
+import me.carc.stolpersteine.data.remote.bio.Section;
 import me.carc.stolpersteine.data.remote.model.Coordinates;
 import me.carc.stolpersteine.data.remote.model.Stolpersteine;
 import me.carc.stolpersteine.data.translate.ResponseTranslate;
@@ -81,13 +82,9 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
     private static final String BASE_URL = "http://www.stolpersteine-berlin.de/";
 
     public static final int RESULT_RELATED = 111;
+    public static final int RESULT_GOOGLE_TRANSLATE = 112;
     public static final String BLOCK_DATA = "BLOCK_DATA";
     public static final String BIO_DATA = "BIO_DATA";
-
-    private static final int GOOGLE_TRANSLATE = 0;
-    private static final int CLOUD_TRANSLATE = 1;
-
-
 
     // EN
     public static final String INFO_LOCATION = "LOCATION";
@@ -96,8 +93,12 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
     public static final String INFO_BORN = "BORN";
     public static final String INFO_OCCUPATION = "OCCUPATION";
     public static final String INFO_DEPORTATION = "DEPORTATION";
+    public static final String INFO_LATER_DEPORTATION = "LATER DEPORTED";
     public static final String INFO_MURDERED = "MURDERED";
     public static final String INFO_DEAD = "DEAD";
+    public static final String INFO_DIED = "DIED";
+    public static final String INFO_ESCAPE = "ESCAPE";
+
 
     //DE
     public static final String INFO_LOCATION_DE = "VERLEGEORT";
@@ -106,8 +107,13 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
     public static final String INFO_BORN_DE = "GEBOREN";
     public static final String INFO_OCCUPATION_DE = "BERUF";
     public static final String INFO_DEPORTATION_DE = "DEPORTATION";
+    public static final String INFO_LATER_DEPORTATION_DE = "WEITERE DEPORTATION";
     public static final String INFO_MURDERED_DE = "ERMORDET";
     public static final String INFO_DEAD_DE = "TOT";
+    public static final String INFO_DIED_DE = "GESTORBEN";
+    public static final String INFO_ESCAPE_DE = "FLUCHT";
+
+
 
     @Inject BlockViewerPresenter mPresenter;
     @Inject SharedPrefsHelper mSharePrefs;
@@ -122,6 +128,8 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
     @BindView(R.id.addressMap) ImageView addressMap;
     @BindView(R.id.address) TextView address;
 
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbarTitle) TextView toolbarTitle;
     @BindView(R.id.translateBtn) ImageButton translateBtn;
 
     @BindView(R.id.born) TextView born;
@@ -134,16 +142,12 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
     @BindView(R.id.flowTextView) FlowTextView flowTextView;
 
 
-//    @BindViews({ R.id.image1, R.id.image2, R.id.image3})
-    List<ImageView> imageViews;
+    private List<ImageView> imageViews;
 
     @BindView(R.id.sectionsRecyclerView) RecyclerView sectionsRecyclerView;
 
+    @BindViews({ R.id.born, R.id.occupation, R.id.deported, R.id.murdered}) List<TextView> infoViews;
 
-    @BindViews({ R.id.born, R.id.occupation, R.id.deported, R.id.murdered})
-    List<TextView> infoViews;
-
-    @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.fabViewer) FloatingActionButton fabViewer;
 
 
@@ -156,6 +160,7 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
                 fabViewer.show();
         }
     };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,7 +178,7 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
             mStolpersteine = intent.getParcelableExtra(BLOCK_DATA);
             // have data
             address.setText(mStolpersteine.getLocation().buildVerticalAddress());
-            toolbar.setTitle(mStolpersteine.getPerson().getFullName());
+            toolbarTitle.setText(mStolpersteine.getPerson().getFullName());
 
             // get data
             if(Commons.isNull(savedInstanceState))
@@ -185,7 +190,6 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
             generateMap(mStolpersteine.getLocation().getCoordinates());
 
             setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             toolbar.setNavigationOnClickListener(v -> exit());
 
         } else
@@ -216,6 +220,10 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
         switch (requestCode) {
             case RESULT_RELATED:
                 fabViewer.show();
+                break;
+
+            case RESULT_GOOGLE_TRANSLATE:
+                Log.d(TAG, "onActivityResult: ");
                 break;
         }
     }
@@ -264,7 +272,7 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
     @OnClick({R.id.addressMap, R.id.venueMapOverlay, R.id.address, R.id.addressContainer})
     void showMap() {
         Intent mapIntent = new Intent(this, MapActivity.class);
-        mapIntent.putExtra(BLOCK_DATA, (Parcelable) mStolpersteine);
+        mapIntent.putExtra(BLOCK_DATA, mStolpersteine);
         startActivity(mapIntent);
     }
 
@@ -287,10 +295,14 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
     void share() {
         try {
             if (Commons.isNotNull(mStolpersteine)) {
+                String text = mStolpersteine.getPerson().getFullName().concat(" - ")
+                        .concat(mStolpersteine.getPerson().getBiographyUrl()).concat("\n")
+                        .concat(String.format(getString(R.string.play_store_link), getPackageName()));
+
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_SUBJECT, mStolpersteine.getPerson().getFullName());
-                sendIntent.putExtra(Intent.EXTRA_TEXT, mStolpersteine.getPerson().getBiographyUrl());
+                sendIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subject));
+                sendIntent.putExtra(Intent.EXTRA_TEXT, text);
                 sendIntent.setType("text/plain");
                 startActivity(Intent.createChooser(sendIntent, getText(R.string.shared_string_send_to)));
             }
@@ -306,52 +318,47 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
     @OnClick(R.id.translateBtn)
     void translate() {
 
-        AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
-        builderSingle.setIcon(R.drawable.ic_translate);
-        builderSingle.setTitle("Translate using:");
+        final PackageManager pm = getPackageManager();
+        boolean hasTranslator = pm.getLaunchIntentForPackage("com.google.android.apps.translate") != null;
 
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_singlechoice);
-        arrayAdapter.add("Use Google Translate");
-        arrayAdapter.add("Try Online Translate");
+        if(hasTranslator) {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setPackage("com.google.android.apps.translate");
 
-        builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+            Uri uri = new Uri.Builder()
+                    .scheme("http")
+                    .authority("translate.google.com")
+                    .path("/m/translate")
+                    .appendQueryParameter("q", mBiography.getBiographyText())
+                    .appendQueryParameter("tl", C.USER_LANGUAGE) // target language
+                    .appendQueryParameter("sl", "de") // source language
+                    .build();
+            intent.setData(uri);
+            startActivity(intent);
 
-        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case GOOGLE_TRANSLATE:
+        } else if(((App)getApplication()).isNetworkAvailable()) {
+            onlineTranlate();
 
+        } else {
+
+            AlertDialog.Builder bldr = new AlertDialog.Builder(this)
+                    .setIcon(R.drawable.ic_translate)
+                    .setTitle(R.string.translateTitle)
+                    .setMessage(R.string.translateMessage)
+                    .setPositiveButton(R.string.translateInstallGoogle, (dlg, which) -> {
+                       startActivity(IntentUtils.openPlayStore(BlockViewerActivity.this, "com.google.android.apps.translate"));
+                        dlg.dismiss();
+                    })
+                    .setNegativeButton(R.string.translateEnableData, (dlg, which ) -> {
                         Intent intent = new Intent();
-                        intent.setAction(Intent.ACTION_VIEW);
-                        intent.setPackage("com.google.android.apps.translate");
-
-                        Uri uri = new Uri.Builder()
-                                .scheme("http")
-                                .authority("translate.google.com")
-                                .path("/m/translate")
-                                .appendQueryParameter("q", mBiography.getBiographyText())
-                                .appendQueryParameter("tl", "en") // target language
-                                .appendQueryParameter("sl", "de") // source language
-                                .build();
-                        //intent.setType("text/plain"); //not needed, but possible
-                        intent.setData(uri);
+                        intent.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
                         startActivity(intent);
+                        dlg.dismiss();
+                    });
 
-                        break;
-                    case CLOUD_TRANSLATE:
-                        onlineTranlate();
-                        break;
-                }
-                dialog.dismiss();
-            }
-        });
-        builderSingle.show();
+            bldr.show();
+        }
     }
 
     private void onlineTranlate() {
@@ -370,9 +377,7 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
                 listTranslations.add(split[i].concat("."));
             }
         }
-
         lineTranslate();
-
     }
 
     private void lineTranslate() {
@@ -390,9 +395,7 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
             @SuppressWarnings({"ConstantConditions"})
             @Override
             public void onResponse(@NonNull Call<ResultTranslate> call, @NonNull Response<ResultTranslate> response) {
-
                 if (response.body() != null) {
-                    Log.d(TAG, "onResponse: ");
                     ResponseTranslate translate = response.body().getResponseData();
 
                     String html = "<p>" + translate.getTranslatedText() + "</p>";
@@ -406,8 +409,6 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
 
             @Override
             public void onFailure(@NonNull Call<ResultTranslate> call, @NonNull Throwable t) {
-                Log.d(TAG, "onFailure: " + t.getMessage());
-
                 if(retyCount < 3) {
                     retyCount++;
                     lineTranslate();  // retry the same line
@@ -415,6 +416,7 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
             }
         });
     }
+
 
     @OnClick(R.id.fabViewer)
     void exit() {
@@ -425,41 +427,56 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
     public void onBackPressed() {
         ViewUtils.createAlphaAnimator(fabViewer, false, getResources()
                 .getInteger(R.integer.gallery_alpha_duration) * 2)
-                .withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        setResult(RESULT_OK, getIntent());
-                        finish();
-                    }
+                .withEndAction(() -> {
+                    setResult(RESULT_OK, getIntent());
+                    finish();
                 }).start();
     }
 
     @Override
     public void onClick(View v) {
-        BioImages images;
+        BioImages images = null;
 
         switch (v.getId()) {
             case R.id.image1:
                 images = mBiography.getImagesList().get(0);
-                ImageDialog.showInstance(getApplication(), images.getPublicImage(), images.getBigImage(),
-                        mStolpersteine.getPerson().getFullName(), null);
                 break;
             case R.id.image2:
                 images = mBiography.getImagesList().get(1);
-                ImageDialog.showInstance(getApplication(), images.getPublicImage(), images.getBigImage(),
-                        mStolpersteine.getPerson().getFullName(), null);
                 break;
             case R.id.image3:
                 images = mBiography.getImagesList().get(2);
-                ImageDialog.showInstance(getApplication(), images.getPublicImage(), images.getBigImage(),
-                        mStolpersteine.getPerson().getFullName(), null);
+                break;
+            case R.id.image4:
+                images = mBiography.getImagesList().get(3);
+                break;
+            case R.id.image5:
+                images = mBiography.getImagesList().get(4);
                 break;
             default:
         }
+
+        if(Commons.isNotNull(images))
+            ImageDialog.showInstance(getApplication(), images.getPublicImage(), images.getBigImage(),
+                    mStolpersteine.getPerson().getFullName(), buildSubTitle());
+    }
+
+    private String buildSubTitle() {
+
+        String subtitle = born.getText().toString();
+
+        if(subtitle.isEmpty())
+            subtitle = murdered.getText().toString();
+        else
+            subtitle = subtitle.concat("\n").concat(murdered.getText().toString());
+
+
+        return subtitle;
     }
 
 
     /* ****** MVP METHODS **** */
+
 
     @Override
     public void onHtmlParsed(Biography bio) {
@@ -470,7 +487,7 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
             Iterator myVeryOwnIterator = bio.getInfo().keySet().iterator();
             while (myVeryOwnIterator.hasNext()) {
                 String key = (String) myVeryOwnIterator.next();
-                String value = key.concat(": ").concat(bio.getInfo().get(key));
+                String value = key.toLowerCase().concat(": ").concat(bio.getInfo().get(key));
 
                 switch (key) {
                     case INFO_LOCATION:
@@ -502,18 +519,29 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
                         deported.setText(value);
                         break;
 
+                    case INFO_LATER_DEPORTATION:
+                    case INFO_LATER_DEPORTATION_DE:
+                        break;
+
                     case INFO_MURDERED:
                     case INFO_MURDERED_DE:
                     case INFO_DEAD:
                     case INFO_DEAD_DE:
+                    case INFO_DIED:
+                    case INFO_DIED_DE:
                         murdered.setVisibility(View.VISIBLE);
                         murdered.setText(value);
+                        break;
+
+                    case INFO_ESCAPE:
+                    case INFO_ESCAPE_DE:
                         break;
 
                     default:
                         if(BuildConfig.DEBUG)
                             Toast.makeText(BlockViewerActivity.this, "Not handled: " + key, Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onHtmlParsed: Not handled: " + key + " : " + value);
+                        Log.d(TAG, "onHtmlParsed: Link: " + mStolpersteine.getPerson().getBiographyUrl());
                 }
             }
             // Hide unused info views
@@ -528,18 +556,22 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
             if(!TextUtils.isEmpty(bio.getBiographyHtml())) {
                 hasText = true;
                 flowTextView.setText(Html.fromHtml(bio.getBiographyHtml()));
+
+                // Can make this dynamic at some point
                 imageViews.add((ImageView) findViewById(R.id.image1));
                 imageViews.add((ImageView) findViewById(R.id.image2));
                 imageViews.add((ImageView) findViewById(R.id.image3));
+                imageViews.add((ImageView) findViewById(R.id.image4));
+                imageViews.add((ImageView) findViewById(R.id.image5));
 
                 final ClipboardManager clipboardManager = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
                 final ClipData clipData = ClipData.newPlainText(mStolpersteine.getPerson().getFullName(), bio.getBiographyText());
                 assert clipboardManager != null;
                 clipboardManager.setPrimaryClip(clipData);
 
-            } else if (bio.getImagesList() != null) {
+                translateBtn.setVisibility(View.VISIBLE);
 
-                translateBtn.setVisibility(View.GONE);
+            } else if (bio.getImagesList() != null) {
 
                 flowTextContainer.removeAllViews();
 
@@ -558,14 +590,15 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
                         imageView.setId(R.id.image2);
                     else if(i == 2)
                         imageView.setId(R.id.image3);
+                    else if(i == 3)
+                        imageView.setId(R.id.image4);
+                    else if(i == 4)
+                        imageView.setId(R.id.image5);
+
                     imageView.setLayoutParams(imageParams);
                     imageViews.add(imageView);
                     flowTextContainer.addView(imageView);
                 }
-            } else {
-
-                // not much to display :/
-                translateBtn.setVisibility(View.GONE);
             }
 
             if (bio.getImagesList() != null) {
@@ -593,9 +626,9 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
     }
 
     private class SetupMore implements Runnable {
-        List<LinksParser.Section> sections;
+        List<Section> sections;
 
-        SetupMore(List<LinksParser.Section> sections) {
+        SetupMore(List<Section> sections) {
             this.sections = sections;
         }
 
@@ -607,9 +640,9 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
         private void populateMore() {
             final ArrayList<SectionsCard> items = new ArrayList<>();
 
-            for (LinksParser.Section section : sections ) {
+            for (Section section : sections ) {
 
-                assert section.getText().size() == section.getLink().size();
+                if (BuildConfig.DEBUG && section.getText().size() != section.getLink().size()) throw new AssertionError();
 
                 items.add(new SectionsCard(section.getType(), SectionsCard.ItemType.NONE, R.drawable.ic_block_attribution)); // Add the title
 
@@ -630,7 +663,6 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
                     @Override
                     public void onClick(View view, int pos) {
                         final SectionsCard item = items.get(pos);
-                        Intent intent;
 
                         switch (item.getType()) {
                             case WEB :
@@ -678,6 +710,8 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
 
     private void updateWithImages(List<BioImages> images) {
         mStolpersteine.setImages(images.get(0));
+        mStolpersteine.setHasBiography(!TextUtils.isEmpty(mBiography.getBiographyText()));
+        mStolpersteine.setNumImages(mBiography.getImagesList().size());
         StolpersteineViewModel mViewModel = ViewModelProviders.of(this).get(StolpersteineViewModel.class);
         mViewModel.insert(mStolpersteine);
     }

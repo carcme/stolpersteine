@@ -30,13 +30,19 @@ import me.carc.stolpersteine.R;
 
 public class Commons {
 
-    public static void Toast(Context context, @StringRes int resId, @ColorInt int bgColor, int duration) {
+    @ColorInt public static final int GREEN = 0xFF006622;
+    @ColorInt public static final int RED = 0xFFc62828;
 
+    public static void Toast(Context context, @StringRes int resId, @ColorInt int bgColor, int duration) {
+        Toast(context, context.getString(resId), bgColor, duration);
+    }
+
+    public static void Toast(Context context, String msg, @ColorInt int bgColor, int duration) {
         final View v = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                 .inflate(R.layout.custom_toast, null);
 
         TextView tv = v.findViewById(R.id.toastMsg);
-        tv.setText(resId);
+        tv.setText(msg);
         tv.setTextColor(Color.WHITE);
 
         Drawable background = context.getDrawable(R.drawable.toast_background);

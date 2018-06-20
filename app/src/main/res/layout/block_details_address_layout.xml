@@ -66,9 +66,7 @@
                 tools:text="Ulricistraße 32\nWannsee\nSteglitz-Zehlendorf\n12159\nBerlin\n"
                 />
 
-
-
-            <TextView
+            <me.carc.stolpersteine.common.views.CapitalisedTextView
                 android:id="@+id/born"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -82,7 +80,7 @@
                 tools:text="BORN: 01/18/1880 in Zimmersrode"
                 />
 
-            <TextView
+            <me.carc.stolpersteine.common.views.CapitalisedTextView
                 android:id="@+id/occupation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -96,7 +94,7 @@
                 tools:text="OCCUPATION: Betreiber eines Viehhandels"
                 />
 
-            <TextView
+            <me.carc.stolpersteine.common.views.CapitalisedTextView
                 android:id="@+id/deported"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -110,7 +108,7 @@
                 tools:text="DEPORTATION:  on the 26th of October 1942 to Riga"
                 />
 
-            <TextView
+            <me.carc.stolpersteine.common.views.CapitalisedTextView
                 android:id="@+id/murdered"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

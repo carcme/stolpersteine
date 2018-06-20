@@ -9,7 +9,6 @@ import dagger.Component;
 import me.carc.stolpersteine.App;
 import me.carc.stolpersteine.common.injection.ApplicationContext;
 import me.carc.stolpersteine.common.injection.module.ApplicationModule;
-import me.carc.stolpersteine.common.location.BTownFusedLocation;
 import me.carc.stolpersteine.data.DataManager;
 import me.carc.stolpersteine.data.SharedPrefsHelper;
 
@@ -28,6 +27,4 @@ public interface ApplicationComponent {
     DataManager getDataManager();
 
     SharedPrefsHelper getPreferenceHelper();
-
-    BTownFusedLocation getFusedLocation();
 }

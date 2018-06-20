@@ -38,8 +38,11 @@ public interface StolpersteineDao {
     @Query("SELECT * FROM stolpersteine_table WHERE type IS 'stolperstein' ORDER BY blockId ASC")
     DataSource.Factory<Integer, Stolpersteine> loadPagedList();
 
+    @Query("SELECT * FROM stolpersteine_table WHERE type IS 'stolperstein' AND latitude BETWEEN :lat1 AND :lat2 AND longitude BETWEEN :lon1 AND :lon2")
+    DataSource.Factory<Integer, Stolpersteine> loadLocalPagedList(Double lat1, Double lat2, Double lon1, Double lon2);
 
-    @Query("SELECT * FROM stolpersteine_table WHERE latitude BETWEEN :lat1 AND :lat2 AND longitude BETWEEN :lon1 AND :lon2")
+
+    @Query("SELECT * FROM stolpersteine_table WHERE type IS 'stolperstein' AND latitude BETWEEN :lat1 AND :lat2 AND longitude BETWEEN :lon1 AND :lon2")
     LiveData<List<Stolpersteine>> getAroundLocation(Double lat1, Double lat2, Double lon1, Double lon2);
 
     @Query("SELECT * FROM stolpersteine_table WHERE biographyUrl LIKE :biographyUrl LIMIT 1")

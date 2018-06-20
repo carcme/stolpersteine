@@ -24,12 +24,17 @@ public class SendFeedback {
     public static final int TYPE_FEEDBACK = 0;
     public static final int TYPE_RATE = 1;
 
+    public static final int IGNORE_VALUE  = 0;
+    public static final int SHOW_RATE_NOW = 1;
+    public static final int SESSION_COUNT = 8;
 
-    public SendFeedback(Context ctx, int type) {
+
+
+    public SendFeedback(Context ctx, int type, int session) {
         if(type == TYPE_FEEDBACK) {
             feedback(ctx);
         }  else if(type == TYPE_RATE) {
-            rate(ctx);
+            rate(ctx, session);
         }
     }
 
@@ -62,9 +67,10 @@ public class SendFeedback {
     }
 
 
-    private void rate(final Context ctx) {
+    private void rate(final Context ctx, int session) {
         final RatingDialog ratingDialog = new RatingDialog.Builder(ctx)
                 .icon(ContextCompat.getDrawable(ctx, R.mipmap.ic_launcher))
+                .session(session)
                 .threshold(3)
                 .title(ctx.getString(R.string.ratings_request_title))
                 .titleTextColor(R.color.md_black_1000)

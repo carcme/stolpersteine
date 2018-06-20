@@ -3,30 +3,32 @@
 
     <PreferenceCategory
         android:key="pref_key_location"
-        android:title="@string/string_todo">
+        android:title="@string/my_location">
 
         <CheckBoxPreference
             android:width="24dp"
             android:height="24dp"
+            android:icon="@drawable/ic_block_round"
             android:defaultValue="true"
             android:key="pref_key_use_gps"
-            android:summary="@string/string_summary"
-            android:title="@string/string_title" />
+            android:summary="Summary"
+            android:title="Title" />
 
     </PreferenceCategory>
 
 
     <PreferenceCategory
         android:key="pref_key_display"
-        android:title="@string/string_todo">
+        android:title="ToDo">
 
         <CheckBoxPreference
             android:width="24dp"
             android:height="24dp"
+            android:icon="@drawable/ic_block_round"
             android:defaultValue="true"
             android:key="pref_key_tours"
-            android:summary="@string/string_summary"
-            android:title="@string/string_title" />
+            android:summary="Summary"
+            android:title="Title" />
 
 <!--
         <ListPreference

@@ -14,6 +14,7 @@ import org.osmdroid.util.GeoPoint;
 public class LabelledGeoPoint extends GeoPoint {
     private String mId;
     private String mLabel;
+    private String mAddress;
 
     public LabelledGeoPoint(double aLatitude, double aLongitude) {
         super(aLatitude, aLongitude);
@@ -29,9 +30,10 @@ public class LabelledGeoPoint extends GeoPoint {
         this.mId = id;
     }
 
-    public LabelledGeoPoint(double aLatitude, double aLongitude, String id, String aLabel) {
+    public LabelledGeoPoint(double aLatitude, double aLongitude, String id, String name, String address) {
         super(aLatitude, aLongitude);
-        this.mLabel = aLabel;
+        this.mLabel = name;
+        this.mAddress = address;
         this.mId = id;
     }
 
@@ -60,9 +62,15 @@ public class LabelledGeoPoint extends GeoPoint {
     public String getLabel() {
         return this.mLabel;
     }
-
     public void setLabel(String label) {
         this.mLabel = label;
+    }
+
+    public String getAddress() {
+        return mAddress;
+    }
+    public void setAddress(String mAddress) {
+        this.mAddress = mAddress;
     }
 
     @Override
@@ -76,12 +84,14 @@ public class LabelledGeoPoint extends GeoPoint {
     private LabelledGeoPoint(final Parcel in) {
         super(in.readDouble(), in.readDouble(), in.readDouble());
         this.setLabel(in.readString());
+        this.setAddress(in.readString());
     }
 
     @Override
     public void writeToParcel(final Parcel out, final int flags) {
         super.writeToParcel(out, flags);
         out.writeString(mLabel);
+        out.writeString(mAddress);
     }
 
     public static final Parcelable.Creator<LabelledGeoPoint> CREATOR = new Parcelable.Creator<LabelledGeoPoint>() {

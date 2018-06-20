@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fabBase"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_gravity="bottom"
+    >
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabBack"
@@ -76,69 +78,60 @@
         tools:visibility="visible"
         />
 
-    <LinearLayout
-        android:id="@+id/fabControlsLayout"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:orientation="vertical">
+        android:layout_marginBottom="@dimen/margin_standard"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        app:rippleColor="@color/colorPrimary"
+        app:backgroundTint="@color/tintTest"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        app:fabSize="normal"
+        app:pressedTranslationZ="0dp"
+        app:srcCompat="@drawable/ic_my_location"/>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_ZoomIn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginBottom="@dimen/margin_standard"
-            android:layout_marginEnd="@dimen/margin_standard"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            app:rippleColor="@color/colorPrimary"
-            app:backgroundTint="@color/tintTest"
-            app:borderWidth="0dp"
-            app:elevation="0dp"
-            app:fabSize="mini"
-            app:layout_anchorGravity="right|end"
-            app:pressedTranslationZ="0dp"
-            app:srcCompat="@drawable/ic_plus"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_ZoomOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="88dp"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        app:rippleColor="@color/colorPrimary"
+        app:backgroundTint="@color/tintTest"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        app:fabSize="mini"
+        app:layout_anchorGravity="right|end"
+        app:pressedTranslationZ="0dp"
+        app:srcCompat="@drawable/ic_minus"/>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_ZoomOut"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginBottom="@dimen/margin_standard"
-            android:layout_marginEnd="@dimen/margin_standard"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            app:rippleColor="@color/colorPrimary"
-            app:backgroundTint="@color/tintTest"
-            app:borderWidth="0dp"
-            app:elevation="0dp"
-            app:fabSize="mini"
-            app:layout_anchorGravity="right|end"
-            app:pressedTranslationZ="0dp"
-            app:srcCompat="@drawable/ic_minus"/>
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginBottom="@dimen/margin_standard"
-            android:layout_marginEnd="@dimen/margin_standard"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            app:rippleColor="@color/colorPrimary"
-            app:backgroundTint="@color/tintTest"
-            app:borderWidth="0dp"
-            app:elevation="0dp"
-            app:fabSize="normal"
-            app:pressedTranslationZ="0dp"
-            app:srcCompat="@drawable/ic_my_location"/>
-
-    </LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_ZoomIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="136dp"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="@color/tintTest"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        app:fabSize="mini"
+        app:layout_anchorGravity="right|end"
+        app:pressedTranslationZ="0dp"
+        app:rippleColor="@color/colorPrimary"
+        app:srcCompat="@drawable/ic_plus"/>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -1,11 +1,14 @@
 package me.carc.stolpersteine.data.remote.bio;
 
+import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import me.carc.stolpersteine.data.db.blocks.Converters;
 
 /**
  * Created by bamptonm on 12/06/2018.
@@ -14,11 +17,20 @@ import java.util.List;
 public class Biography implements Parcelable {
     private static final String TAG = Biography.class.getName();
 
+    @TypeConverters(Converters.class)
     private List<BioImages> imagesList = null;
-    private List<LinksParser.Section> sections = null;
+
+    @TypeConverters(Converters.class)
+    private List<Section> sections = null;
+
+    @TypeConverters(Converters.class)
     private HashMap<String, String> info = new HashMap<String, String>();
+
     private String biographyText;
+
     private String biographyHtml;
+
+
 
     public List<BioImages> getImagesList() {
         return imagesList;
@@ -27,10 +39,10 @@ public class Biography implements Parcelable {
         this.imagesList = imagesList;
     }
 
-    public List<LinksParser.Section> getSections() {
+    public List<Section> getSections() {
         return sections;
     }
-    public void setSections(List<LinksParser.Section> sections) {
+    public void setSections(List<Section> sections) {
         this.sections = sections;
     }
 
@@ -74,7 +86,7 @@ public class Biography implements Parcelable {
 
     protected Biography(Parcel in) {
         this.imagesList = in.createTypedArrayList(BioImages.CREATOR);
-        this.sections = new ArrayList<LinksParser.Section>();
+        this.sections = new ArrayList<Section>();
         in.readList(this.sections, List.class.getClassLoader());
         this.info = (HashMap<String, String>) in.readSerializable();
         this.biographyText = in.readString();

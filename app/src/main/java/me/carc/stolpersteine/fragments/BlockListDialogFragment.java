@@ -21,8 +21,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
-import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
 import butterknife.BindView;
@@ -33,10 +34,11 @@ import butterknife.Unbinder;
 import me.carc.stolpersteine.App;
 import me.carc.stolpersteine.R;
 import me.carc.stolpersteine.activities.viewer.BlockViewerActivity;
-import me.carc.stolpersteine.common.utils.AndroidUtils;
 import me.carc.stolpersteine.common.Commons;
+import me.carc.stolpersteine.common.utils.AndroidUtils;
 import me.carc.stolpersteine.common.utils.MapUtils;
 import me.carc.stolpersteine.common.utils.ViewUtils;
+import me.carc.stolpersteine.common.views.RecyclerViewEmptySupport;
 import me.carc.stolpersteine.data.db.blocks.StolpersteineViewModel;
 import me.carc.stolpersteine.data.remote.model.Coordinates;
 import me.carc.stolpersteine.fragments.adapters.BlockListAdapter;
@@ -58,8 +60,7 @@ public class BlockListDialogFragment extends DialogFragment {
     public static final String BLOCK_POS  = "BLOCK_POS";
     public static final int RESULT_UPDATE_IMAGE = 1010;
 
-    private static final String MY_LAT = "MY_LAT";
-    private static final String MY_LNG = "MY_LNG";
+    private static final String BBOX = "BOUNDING_BOX";
 
     public static final int AUTOCOMPLETE_THRESHOLD = 3;
 
@@ -67,8 +68,6 @@ public class BlockListDialogFragment extends DialogFragment {
     private BlockListAdapter adapter;
     private Unbinder unbinder;
 
-//    @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
-//    @BindView(R.id.backdrop) ImageView imageBackDrop;
     @BindView(R.id.search_appbar) AppBarLayout search_appbar;
     @BindView(R.id.search_toolbar) Toolbar toolbar;
     @BindView(R.id.searchEditText) EditText searchEditText;
@@ -76,20 +75,20 @@ public class BlockListDialogFragment extends DialogFragment {
     @BindView(R.id.clearButton) ImageButton clearButton;
     @BindView(R.id.settingButton) ImageButton settingButton;
 
+    @BindView(R.id.recyclerview) RecyclerViewEmptySupport recyclerView;
+    @BindView(R.id.emptyRecyclerView) TextView emptyRecyclerView;
 
-    @BindView(R.id.recyclerview) RecyclerView recyclerView;
     @BindView(R.id.fabClose) FloatingActionButton fabClose;
 
-    public static void showInstance(final Context appContext, final IGeoPoint currLocation) {
+    public static void showInstance(final Context appContext, final BoundingBox boundingBox) {
 
         AppCompatActivity activity = ((App) appContext).getCurrentActivity();
 
         try {
             Bundle bundle = new Bundle();
 
-            if (currLocation != null) {
-                bundle.putDouble(MY_LAT, currLocation.getLatitude());
-                bundle.putDouble(MY_LNG, currLocation.getLongitude());
+            if (boundingBox != null) {
+                bundle.putParcelable(BBOX, boundingBox);
             }
 
             BlockListDialogFragment fragment = new BlockListDialogFragment();
@@ -127,23 +126,13 @@ public class BlockListDialogFragment extends DialogFragment {
 
         Bundle args = getArguments();
         if (args != null) {
-
-            double lat = args.getDouble(MY_LAT, Double.NaN);
-            double lng = args.getDouble(MY_LNG, Double.NaN);
-            GeoPoint location = null;
-            if (!Double.isNaN(lat) && !Double.isNaN(lng))
-                location = new GeoPoint(lat, lng);
-
-            configRecyclerView(location);
-
-//            Drawable drawable = ViewUtils.changeIconColor(getContext(), R.drawable.ic_arrow_back, R.color.md_white_1000);
-//            toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+            configRecyclerView(args.getParcelable(BBOX));
             toolbar.setNavigationOnClickListener(v -> dismiss());
         }
         return view;
     }
 
-    private void configRecyclerView(GeoPoint location){
+    private void configRecyclerView(BoundingBox bbox){
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
         recyclerView.addItemDecoration(itemDecoration);
 
@@ -151,15 +140,15 @@ public class BlockListDialogFragment extends DialogFragment {
         mViewModel = ViewModelProviders.of(this).get(StolpersteineViewModel.class);
 
         // Populate the paging adapter
-        adapter = new BlockListAdapter(location);
-        mViewModel.getPagedList().observe(this, adapter::submitList);
+        adapter = new BlockListAdapter();
+        mViewModel.getLocalPagedList(bbox).observe(this, adapter::submitList);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnScrollListener(scrollListener);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-
+        recyclerView.setEmptyView(emptyRecyclerView);
 
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, new RecyclerClickListener() {
             @Override
@@ -185,6 +174,7 @@ public class BlockListDialogFragment extends DialogFragment {
                     int index = data.getIntExtra(BLOCK_POS, -1);
                     if(index != -1) {
                         adapter.notifyItemChanged(index);
+                        recyclerView.smoothScrollToPosition(index);
                     }
                 }
                 break;
@@ -232,7 +222,6 @@ public class BlockListDialogFragment extends DialogFragment {
         double d = MapUtils.getDistance(location, node.getLatitude(), node.getLongitude());
         return MapUtils.getFormattedDistance(d);
     }
-
 
     @OnClick(R.id.clearButton)
     void onClear() {

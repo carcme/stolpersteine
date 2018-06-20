@@ -18,7 +18,7 @@ import me.carc.stolpersteine.data.remote.model.Stolpersteine;
  * Created by bamptonm on 04/10/2017.
  */
 
-@Database(entities = {Stolpersteine.class}, version = 2)
+@Database(entities = {Stolpersteine.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract StolpersteineDao stolpersteineDao();
@@ -31,7 +31,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, App.DATABASE_NAME)
-                            .addMigrations(Migrations.MIGRATION_1_2)
+//                            .addMigrations(Migrations.MIGRATION_1_2)
 //                            .fallbackToDestructiveMigration()  // TODO: REMOVE FOR RELEASE
                             .build();
                 }

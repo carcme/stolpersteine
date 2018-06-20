@@ -11,8 +11,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 
+import com.crashlytics.android.Crashlytics;
+
 import javax.inject.Inject;
 
+import io.fabric.sdk.android.Fabric;
 import me.carc.stolpersteine.common.Commons;
 import me.carc.stolpersteine.common.NetworkChangeReceiver;
 import me.carc.stolpersteine.common.injection.component.ApplicationComponent;
@@ -91,6 +94,9 @@ public class App extends Application {
      */
     public void onCreate() {
         super.onCreate();
+
+        if(BuildConfig.USE_CRASHLYTICS)
+            Fabric.with(this, new Crashlytics());
 
         applicationContext = getApplicationContext();
         registerConnectivityRecver();

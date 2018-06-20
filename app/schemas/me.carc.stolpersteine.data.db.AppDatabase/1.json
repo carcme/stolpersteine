@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "73a5376567d2d3c93604145ec775651a",
+    "identityHash": "2a681c10b1a0d7191c99522f02b52166",
     "entities": [
       {
         "tableName": "stolpersteine_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`blockId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type` TEXT, `updatedAt` TEXT, `createdAt` TEXT, `source` TEXT, `id` TEXT, `street` TEXT, `zipCode` TEXT, `city` TEXT, `sublocality1` TEXT, `sublocality2` TEXT, `state` TEXT, `longitude` REAL, `latitude` REAL, `firstName` TEXT, `lastName` TEXT, `biographyUrl` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`blockId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type` TEXT, `updatedAt` TEXT, `createdAt` TEXT, `source` TEXT, `id` TEXT, `hasBiography` INTEGER NOT NULL, `numImages` INTEGER NOT NULL, `street` TEXT, `zipCode` TEXT, `city` TEXT, `sublocality1` TEXT, `sublocality2` TEXT, `state` TEXT, `longitude` REAL, `latitude` REAL, `firstName` TEXT, `lastName` TEXT, `biographyUrl` TEXT, `imageTitle` TEXT, `publicImage` TEXT, `bigImage` TEXT, `thumbnail` TEXT)",
         "fields": [
           {
             "fieldPath": "blockId",
@@ -43,6 +43,18 @@
             "columnName": "id",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "hasBiography",
+            "columnName": "hasBiography",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "numImages",
+            "columnName": "numImages",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "location.street",
@@ -109,6 +121,30 @@
             "columnName": "biographyUrl",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "images.title",
+            "columnName": "imageTitle",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "images.publicImage",
+            "columnName": "publicImage",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "images.bigImage",
+            "columnName": "bigImage",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "images.thumbnail",
+            "columnName": "thumbnail",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -123,7 +159,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"73a5376567d2d3c93604145ec775651a\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"2a681c10b1a0d7191c99522f02b52166\")"
     ]
   }
 }

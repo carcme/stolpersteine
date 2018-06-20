@@ -4,29 +4,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="76dp"
+    android:layout_height="72dp"
     android:orientation="vertical"
-    tools:background="@color/md_red_400">
+    tools:background="@color/colorPrimary">
 
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/snackIcon"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:contentDescription="@null"
         android:layout_centerVertical="true"
-        android:layout_marginStart="@dimen/margin_standard"
-        app:srcCompat="@drawable/ic_block_test"/>
+        android:padding="@dimen/margin_standard"
+        app:srcCompat="@drawable/ic_block"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/margin_standard"
-        android:layout_marginRight="@dimen/margin_standard"
-        android:layout_toEndOf="@+id/imageView">
+        android:layout_toEndOf="@+id/snackIcon">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/snackFullName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#fff"
@@ -35,13 +33,25 @@
             tools:text="@tools:sample/full_names"/>
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/snackAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textView2"
+            android:layout_below="@+id/snackFullName"
             tools:text="@tools:sample/lorem"
             android:textColor="#fff"/>
 
     </RelativeLayout>
+
+    <Button
+        android:id="@+id/viewBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        style="@style/Base.TextAppearance.AppCompat.Widget.Button.Borderless.Colored"
+        android:background="@color/transparent"
+        android:textColor="@color/colorAccent"
+        android:layout_alignParentEnd="true"
+        android:text="View"/>
+
 
 </RelativeLayout>

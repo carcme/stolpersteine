@@ -114,6 +114,21 @@ public class Location implements Parcelable {
         return sb.toString();
     }
 
+
+    public String buildShortAddress() {
+        StringBuilder sb = new StringBuilder(street);
+
+        if(sublocality1.equalsIgnoreCase(sublocality2))
+            sb.append(", ").append(sublocality1);
+        else if(!TextUtils.isEmpty(sublocality1))
+            sb.append(", ").append(sublocality1);
+        else if(!TextUtils.isEmpty(sublocality2))
+            sb.append(", ").append(sublocality2);
+
+        return sb.toString();
+    }
+
+
     public String buildVerticalAddress() {
         StringBuilder sb = new StringBuilder(street);
 

@@ -3,7 +3,6 @@ package me.carc.stolpersteine.fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -32,10 +31,10 @@ import butterknife.Unbinder;
 import me.carc.stolpersteine.App;
 import me.carc.stolpersteine.R;
 import me.carc.stolpersteine.common.Commons;
-import me.carc.stolpersteine.common.views.TouchImageView;
+import me.carc.stolpersteine.common.views.photoview.PhotoView;
 
 /**
- * Show a rotating compass dialog page
+ * Show an image
  * Created by bamptonm on 6/3/17.
  */
 
@@ -55,7 +54,7 @@ public class ImageDialog extends DialogFragment {
     private Unbinder unbinder;
 
     @BindView(R.id.imageDialogImage)
-    TouchImageView image;
+    PhotoView mPhotoView;
 
     @BindView(R.id.imageLoadProgress)
     ProgressBar imageLoadProgress;
@@ -100,7 +99,6 @@ public class ImageDialog extends DialogFragment {
         setStyle(STYLE_NO_FRAME, R.style.Dialog_FilledFullscreen);
     }
 
-   @SuppressLint("Range")
    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.image_dialog_layout, container, false);
@@ -108,39 +106,22 @@ public class ImageDialog extends DialogFragment {
 
         Bundle args = getArguments();
         if (args != null) {
-            String imageUrl = args.getString(IMAGE_URL);
+//            String imageUrl = args.getString(IMAGE_URL);
             imageTitle.setText(args.getString(TITLE));
             imageSubTitle.setText(args.getString(SUBTITLE));
             if (Commons.isEmpty(args.getString(SUBTITLE)))
                 imageSubTitle.setVisibility(View.GONE);
 
-            Glide.with(this)
-                    .load(imageUrl)
-                    .apply(RequestOptions.overrideOf(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL))
-                    .listener(new RequestListener<Drawable>(){
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            imageLoadProgress.setVisibility(View.GONE);
-                            Commons.Toast(getActivity(), R.string.error_image_load, Color.RED, Toast.LENGTH_LONG);
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            imageLoadProgress.setVisibility(View.GONE);
-                            return false;
-                        }
-                    })
-                    .into(image);
+            imageLoadProgress.setVisibility(View.VISIBLE);
+            loadNetworkImage();
 
             int scale = 3;//TinyDB.getTinyDB().getInt(SAVED_SCALE_TYPE, ImageView.ScaleType.CENTER_CROP.ordinal());
             switch (scale) {
                 case 3:
-                    image.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    mPhotoView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                     break;
-
                 case 6:
-                    image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    mPhotoView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     break;
                 default:
             }
@@ -150,6 +131,53 @@ public class ImageDialog extends DialogFragment {
         return view;
     }
 
+    @SuppressLint("Range")
+    private void loadNetworkImage() {
+        String loadString = getArguments().getString(IMAGE_URL);
+        // Crashlytics  #138 - check user hasn't got bored and left
+        if(getActivity() != null)
+            Glide.with(this)
+                    .load(loadString)
+                    .apply(RequestOptions.overrideOf(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL))
+                    .listener(glideListener)
+                    .into(mPhotoView);
+    }
+
+    private RequestListener<Drawable> glideListener = new RequestListener<Drawable>() {
+        int retryCount = 3;
+
+        @Override
+        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+            if (retryCount != 0) {
+                Commons.Toast(getActivity(), String.format(getString(R.string.debug_error_image_load), retryCount), Commons.RED, Toast.LENGTH_SHORT);
+                loadNetworkImage();
+                retryCount--;
+                return true;
+            }
+
+            // make sure user hasn't exited while waiting for the image to load!!
+            if (Commons.isNotNull(mPhotoView)) {
+                mPhotoView.setImageResource(R.drawable.ic_network_check);
+                mPhotoView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            }
+            if (Commons.isNotNull(imageLoadProgress))
+                imageLoadProgress.setVisibility(View.GONE);
+
+            // show load error notification
+            if (getActivity() != null) {
+                Commons.Toast(getActivity(), R.string.error_image_load, Commons.RED, Toast.LENGTH_SHORT);
+            }
+            return false;
+        }
+
+        @Override
+        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+            if (Commons.isNotNull(imageLoadProgress))
+                imageLoadProgress.setVisibility(View.GONE);
+            return false;
+        }
+    };
+
 
     @OnClick(R.id.textContainer)
     void onTextContainerClick() {
@@ -158,10 +186,10 @@ public class ImageDialog extends DialogFragment {
 
     @OnClick(R.id.imageDialogImage)
     void singleImageTouch() {
-        if (image.getScaleType() == ImageView.ScaleType.CENTER_CROP) {
-            image.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        if (mPhotoView.getScaleType() == ImageView.ScaleType.CENTER_CROP) {
+            mPhotoView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         } else
-            image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            mPhotoView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
 //        TinyDB.getTinyDB().putInt(SAVED_SCALE_TYPE, image.getScaleType().ordinal());
     }
@@ -329,7 +357,7 @@ public class ImageDialog extends DialogFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ACTIVITY_CROP || requestCode == ACTIVITY_SHARE) {
             imageLoadProgress.setVisibility(View.GONE);
-            Commons.Toast(getActivity(), R.string.shared_string_success, Color.GREEN, Toast.LENGTH_SHORT);
+            Commons.Toast(getActivity(), R.string.shared_string_success, Commons.GREEN, Toast.LENGTH_SHORT);
         }
     }
 

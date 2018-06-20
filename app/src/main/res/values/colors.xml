@@ -5,11 +5,6 @@
     <!--<color name="colorAccent">#DDB617</color>-->
     <color name="colorAccent">@color/md_yellow_700</color>
 
-
-    <color name="temp1">#ff7700</color>
-    <color name="temp2">#ffff00</color>
-    <color name="temp3">#ffff00</color>
-
     <color name="ratePositiveBtnBgColor">@color/md_white_1000</color>
     <color name="rateNegativeBtnBgColor">@color/md_white_1000</color>
 
@@ -25,5 +20,6 @@
     <color name="tintTest">#88795548</color>
     <color name="tintStandard">#80000000</color>
     <color name="tintDark">#A0000000</color>
+    <color name="tintSolid">#FF000000</color>
 
 </resources>

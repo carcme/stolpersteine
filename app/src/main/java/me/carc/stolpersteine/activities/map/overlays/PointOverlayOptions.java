@@ -30,12 +30,12 @@ public class PointOverlayOptions {
     public PointOverlayOptions() {
         mPointStyle = new Paint();
         mPointStyle.setStyle(Paint.Style.FILL);
-        mPointStyle.setColor(Color.parseColor("#d32f2f"));
+        mPointStyle.setColor(Color.parseColor("#d32f2f"));  // md_red_700
 
         mSelectedPointStyle = new Paint();
         mSelectedPointStyle.setStrokeWidth(5);
         mSelectedPointStyle.setStyle(Paint.Style.STROKE);
-        mSelectedPointStyle.setColor(Color.parseColor("#795548"));
+        mSelectedPointStyle.setColor(Color.parseColor("#fbc02d"));
 
         mTextStyle = new Paint();
         mTextStyle.setStyle(Paint.Style.FILL);

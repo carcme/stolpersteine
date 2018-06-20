@@ -37,6 +37,7 @@ public class StolpersteineRepository {
         return mDao.getAllStumblingBlocks();
     }
 
+
     LiveData<List<Stolpersteine>> getAroundLocation(Double lat1, Double lat2, Double lon1, Double lon2) {
         return mDao.getAroundLocation(lat1, lat2, lon1, lon2);
     }
@@ -45,18 +46,25 @@ public class StolpersteineRepository {
         return mDao.getStumblingBlock(id);
     }
 
+
     LiveData<PagedList<Stolpersteine>> getPagedList() {
         return new LivePagedListBuilder<>(mDao.loadPagedList(), PAGE_SIZE).build();
     }
+
+
+    LiveData<PagedList<Stolpersteine>> loadLocalPagedList(Double lat1, Double lat2, Double lon1, Double lon2) {
+        return new LivePagedListBuilder<>(mDao.loadLocalPagedList(lat1, lat2, lon1, lon2), PAGE_SIZE).build();
+    }
+
 
     LiveData<PagedList<Stolpersteine>> getSearchList(String search) {
         return new LivePagedListBuilder<>(mDao.search(search), PAGE_SIZE).build();
     }
 
+
     LiveData<Stolpersteine> getBlock(String bioUrl) {
         return mDao.getStumblingBlock(bioUrl);
     }
-
 
 
 
