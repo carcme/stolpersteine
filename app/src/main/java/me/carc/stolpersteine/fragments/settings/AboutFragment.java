@@ -92,10 +92,13 @@ public class AboutFragment extends Fragment {
     @OnClick(R.id.shareApp)
     void share() {
         if(Commons.isNotNull(getActivity())) {
+            String text = getString(R.string.share_subject).concat("\n")
+                    .concat(String.format(getString(R.string.play_store_link), getActivity().getPackageName()));
+
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setAction(Intent.ACTION_SEND);
             intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subject));
-            intent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=" + getActivity().getPackageName());
+            intent.putExtra(Intent.EXTRA_TEXT, text);
             intent.setType("text/plain");
             startActivity(Intent.createChooser(intent, getString(R.string.shared_string_share)));
         }

@@ -105,6 +105,12 @@ public class Commons {
         return sb.toString();
     }
 
+
+    public static String capitalise(String input) {
+        return input.substring(0, 1).toUpperCase() + input.substring(1);
+    }
+
+
     public static String getString(Context ctx, int strID) {
         return ctx.getApplicationContext().getString(strID);
     }

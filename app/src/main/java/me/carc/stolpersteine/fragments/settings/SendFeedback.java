@@ -118,10 +118,9 @@ public class SendFeedback {
         String[] address = new String[1];
         address[0] = ctx.getString(R.string.feedbackEmail);
 
-        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                "mailto",address[0], null));
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto",address[0], null));
         emailIntent.putExtra(Intent.EXTRA_EMAIL, address); // String[] addresses
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, ctx.getString(R.string.feedbackEmailSubject));
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, ctx.getString(R.string.share_subject));
         emailIntent.putExtra(Intent.EXTRA_TEXT, text);
         ctx.startActivity(Intent.createChooser(emailIntent, "Send email..."));
     }

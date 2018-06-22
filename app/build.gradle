@@ -21,8 +21,8 @@ android {
         applicationId "me.carc.stolpersteine"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         android.defaultConfig.vectorDrawables.useSupportLibrary = true
         javaCompileOptions {
@@ -30,11 +30,11 @@ android {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
-        multiDexEnabled false
+        multiDexEnabled true
     }
     buildTypes {
         debug {
-            buildConfigField "boolean", "USE_CRASHLYTICS", "true"
+            buildConfigField "boolean", "USE_CRASHLYTICS", "false"
 
             minifyEnabled false
             shrinkResources false
@@ -164,7 +164,9 @@ dependencies {
     implementation "com.mikepenz:aboutlibraries:6.0.8"
 
     // Flow Text - test it out :)
-    implementation 'com.github.deano2390:FlowTextView:2.0.5'
+//    implementation 'com.github.deano2390:FlowTextView:2.0.5'
+//    implementation 'su.whs:wATLlib:1.2.3'
+
 
     // Testing
     testImplementation 'junit:junit:4.12'

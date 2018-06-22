@@ -30,12 +30,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <uk.co.deanwild.flowtextview.FlowTextView
+
+            <me.carc.stolpersteine.common.views.flowtextview.FlowTextView
                 android:id="@+id/flowTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_standard"
-                android:textIsSelectable="true">
+                android:textIsSelectable="true"
+                android:linksClickable="true">
 
                 <ImageView
                     android:id="@+id/image1"
@@ -92,7 +94,7 @@
                     android:visibility="gone"
                     tools:src="@tools:sample/backgrounds/scenic"/>
 
-            </uk.co.deanwild.flowtextview.FlowTextView>
+            </me.carc.stolpersteine.common.views.flowtextview.FlowTextView>
 
         </LinearLayout>
 

@@ -20,6 +20,7 @@ import me.carc.stolpersteine.data.remote.bio.BiographyParser;
 import me.carc.stolpersteine.data.remote.bio.ImageParser;
 import me.carc.stolpersteine.data.remote.bio.InfoParser;
 import me.carc.stolpersteine.data.remote.bio.LinksParser;
+import me.carc.stolpersteine.data.remote.bio.Test;
 
 
 /**
@@ -70,8 +71,9 @@ public class BlockViewerPresenter extends MvpBasePresenter<BlockViewerMvpView> {
             Biography bio = new Biography();
 
             try {
-//                Element body = Jsoup.parse(Test.biografie_1420);
-                Element body = Jsoup.connect(getLanguage(url)).get();
+                Element body = Jsoup.parse(Test.problem1);
+//                Element body = Jsoup.connect(getLanguage(url)).get();
+
                 try {
                     bio.setImagesList(JsoupProcessor.from(body, ImageParser.class).getBioImagesList());
                 } catch (Exception noImageElementFound){

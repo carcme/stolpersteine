@@ -23,12 +23,11 @@ import me.carc.stolpersteine.fragments.settings.carc_apps.CarcFragment;
 public class SettingsPagerFragment extends Fragment {
     public static final String TAG_ID = SettingsPagerFragment.class.getName();
 
-//    private static final int SETTING_TAB = 0;
-    private static final int ABOUT_TAB = 0;
-    private static final int LIBS_TAB = 1;
-    private static final int CARC_TAB = 2;
-    private static final int LAST_TAB = CARC_TAB + 1;
-    private static final int TAB_COUNT = LAST_TAB;
+    private static final int ABOUT_TAB      = 0;
+    private static final int SETTING_TAB    = 1;
+    private static final int LIBS_TAB       = 2;
+    private static final int CARC_TAB       = 3;
+    private static final int TAB_COUNT      = CARC_TAB + 1;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -76,8 +75,8 @@ public class SettingsPagerFragment extends Fragment {
                         .fragment();
             } else if (i == CARC_TAB) {
                 return new CarcFragment();
-//            } else if (i == SETTING_TAB) {
-//                return new SettingsTabFragment();
+            } else if (i == SETTING_TAB) {
+                return new SettingsTabFragment();
             }
             return new AboutFragment();
         }

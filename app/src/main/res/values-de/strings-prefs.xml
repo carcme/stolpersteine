@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="pref_translate_title">Übersetzungen</string>
+    <string name="pref_translate_summaryOn">Nutze Google Übersetzer (Installation erforderlich)</string>
+    <string name="pref_translate_summaryOff">In-App mit \'MyMemory\' und Google (nutzt Daten) übersetzen</string>
+
+</resources>

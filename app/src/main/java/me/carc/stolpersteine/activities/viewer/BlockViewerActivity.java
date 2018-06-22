@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonArray;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -55,6 +56,8 @@ import me.carc.stolpersteine.common.utils.AndroidUtils;
 import me.carc.stolpersteine.common.utils.IntentUtils;
 import me.carc.stolpersteine.common.utils.MapUtils;
 import me.carc.stolpersteine.common.utils.ViewUtils;
+import me.carc.stolpersteine.common.views.flowtextview.FlowTextView;
+import me.carc.stolpersteine.common.views.flowtextview.listeners.OnLinkClickListener;
 import me.carc.stolpersteine.data.DataManager;
 import me.carc.stolpersteine.data.SharedPrefsHelper;
 import me.carc.stolpersteine.data.db.blocks.StolpersteineViewModel;
@@ -67,13 +70,14 @@ import me.carc.stolpersteine.data.translate.ResponseTranslate;
 import me.carc.stolpersteine.data.translate.ResultTranslate;
 import me.carc.stolpersteine.data.translate.TranslateApi;
 import me.carc.stolpersteine.data.translate.TranslateApiServiceProvider;
+import me.carc.stolpersteine.data.translateGoogle.GoogleApi;
+import me.carc.stolpersteine.data.translateGoogle.GoogleApiServiceProvider;
 import me.carc.stolpersteine.fragments.ImageDialog;
 import me.carc.stolpersteine.interfaces.RecyclerClickListener;
 import me.carc.stolpersteine.interfaces.RecyclerTouchListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import uk.co.deanwild.flowtextview.FlowTextView;
 
 
 public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerMvpView, View.OnClickListener {
@@ -137,10 +141,8 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
     @BindView(R.id.deported) TextView deported;
     @BindView(R.id.murdered) TextView murdered;
 
-
     @BindView(R.id.flowTextContainer) LinearLayout flowTextContainer;
     @BindView(R.id.flowTextView) FlowTextView flowTextView;
-
 
     private List<ImageView> imageViews;
 
@@ -234,7 +236,6 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
         outState.putParcelable(BIO_DATA, mBiography);
     }
 
-
     @Override
     protected void onDestroy() {
         unbinder.unbind();
@@ -242,7 +243,6 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
     }
 
     private void generateMap(Coordinates location) {
-
         final double dLat = location.getLatitude();
         final double dLon = location.getLongitude();
 
@@ -268,14 +268,12 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
         }
     }
 
-
     @OnClick({R.id.addressMap, R.id.venueMapOverlay, R.id.address, R.id.addressContainer})
     void showMap() {
         Intent mapIntent = new Intent(this, MapActivity.class);
         mapIntent.putExtra(BLOCK_DATA, mStolpersteine);
         startActivity(mapIntent);
     }
-
 
     @OnClick(R.id.viewerDirections)
     void route() {
@@ -289,7 +287,6 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
             }
         }
     }
-
 
     @OnClick(R.id.viewerShare)
     void share() {
@@ -314,6 +311,8 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
     List<String> listTranslations = new ArrayList<>();
     int indexTranslation = 0;
     int retyCount = 0;
+    boolean addFormat = false;
+    String mTranslatedText = "";
 
     @OnClick(R.id.translateBtn)
     void translate() {
@@ -321,7 +320,7 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
         final PackageManager pm = getPackageManager();
         boolean hasTranslator = pm.getLaunchIntentForPackage("com.google.android.apps.translate") != null;
 
-        if(hasTranslator) {
+        if(hasTranslator && mDataMngr.useGoogleTranslate()) {
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_VIEW);
             intent.setPackage("com.google.android.apps.translate");
@@ -362,9 +361,18 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
     }
 
     private void onlineTranlate() {
-        flowTextView.setText("");
+        if(mDataMngr.isMyMemoryQuotaUsed())
+            googleTranslate(mBiography.getBiographyHtml());
+        else
+            memoryTranslate(mBiography.getBiographyText());
+    }
 
-        String[] split = mBiography.getBiographyText().split("\\.", 450);
+    private void memoryTranslate(String query) {
+        flowTextView.setText("");
+        splitHtml();
+
+/*
+        String[] split = query.split("\\.", 450);
 
         for (int i = 0; i < split.length; i++) {
             if (!TextUtils.isEmpty(split[i]) && Character.isDigit(split[i].charAt(split[i].length() - 1))) {
@@ -378,16 +386,141 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
             }
         }
         lineTranslate();
+*/
+    }
+
+    private void googleTranslate(String query) {
+        flowTextView.setText("");
+
+        if(query.startsWith("<div"))
+            query = query.substring(query.indexOf("<p>"));
+
+        query = query.replaceAll("</div>", "");
+
+        while(query.contains(" title=\"")) {
+            int startIndex = query.indexOf(" title=\"");
+            int endIndex = query.indexOf(">", startIndex);
+            query = query.replace(query.substring(startIndex, endIndex), "");
+        }
+
+        googleTranslateService(query);
+    }
+
+    private void googleTranslateService(String query) {
+        GoogleApi service = GoogleApiServiceProvider.get();
+        Call<JsonArray> call = service.translate(query, "en", "de");
+        call.enqueue(new Callback<JsonArray>() {
+            @Override
+            public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
+                if (response.body() != null) {
+                    JsonArray array1 = response.body().get(0).getAsJsonArray();
+
+                    String translatedText = "";
+                    for (int i = 0; i < array1.size(); i++) {
+                        String str = array1.get(i).getAsJsonArray().get(0).getAsString();
+                        str = str.replaceAll(" \\+", "");
+
+                        if (str.contains(" href=\"/de/glossar"))
+                            str = str.replace("href=\"/de/glossar", "href=\"https://www.stolpersteine-berlin.de/de/glossar");
+                        else if (str.contains(" href=\"/en/glossar")) {
+                            str = str.replace("href=\"/en/glossar", "href=\"https://www.stolpersteine-berlin.de/de/glossar");
+
+                            // TODO: 22/06/2018 get the englsih translations - its not a direct lang replacement :/
+/*                            String hashValue = Commons.capitalise(str.substring(str.indexOf("\">") + 2, str.indexOf("</a>")).trim());
+                            int replaceStart = str.indexOf("href=\"");
+                            int replaceEnd = str.indexOf("\">");
+                            str = str.replace(str.substring(replaceStart, replaceEnd), "href=\"https://www.stolpersteine-berlin.de/en/glossar#" + hashValue);
+*/                      }
+
+                        translatedText = translatedText.concat(str);
+                    }
+                    flowTextView.setText(Html.fromHtml(translatedText));
+                    mBiography.setBiographyHtml(translatedText);
+
+                } else {
+                    flowTextView.setText(mBiography.getBiographyHtml());
+                    Commons.Toast(BlockViewerActivity.this, R.string.error_translate, Commons.RED, Toast.LENGTH_LONG);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonArray> call, Throwable t) {
+                flowTextView.setText(mBiography.getBiographyHtml());
+                Commons.Toast(BlockViewerActivity.this, R.string.error_translate, Commons.RED, Toast.LENGTH_LONG);
+            }
+        });
+    }
+
+    private void splitHtml() {
+
+        String[] split = mBiography.getBiographyHtml().split("</p>", 450);
+
+        for (int i = 0; i < split.length; i++) {
+
+            if(split[i].startsWith("<div"))
+                split[i] = split[i].substring(split[i].indexOf("<p>"));
+
+            if(split[i].startsWith("Mit "))
+                Log.d(TAG, "REMOVE ME: ");
+
+
+            if(split[i].contains("</div>"))
+                continue;
+
+            while(split[i].contains(" title=\"")) {
+                int startIndex = split[i].indexOf(" title=\"");
+                int endIndex = split[i].indexOf(">", startIndex);
+                split[i] = split[i].replace(split[i].substring(startIndex, endIndex), "");
+            }
+
+            String[] tooLong;
+            if(split[i].length() > 480) {  // 500 char limit on MyMemory
+                tooLong = split[i].split("\\. ");   // find end of line
+                for (int j = 0; j < tooLong.length; j++) {
+                    if (!TextUtils.isEmpty(tooLong[j]) && Character.isDigit(tooLong[j].charAt(tooLong[j].length() - 1))) {
+                        listTranslations.add(tooLong[j].concat(tooLong[++j]).concat("."));
+                        tooLong[j] = "";
+                    } else {
+                        if(tooLong[j].length() > 480) {
+                            String[] gettingSilly = tooLong[j].split("\\?");
+                            for (String str : gettingSilly) {
+                                listTranslations.add(str.concat("?"));
+                            }
+                        } else
+                            listTranslations.add(tooLong[j].concat("."));
+                    }
+
+                }
+            } else
+                listTranslations.add(split[i]);
+        }
+
+        lineTranslate();
     }
 
     private void lineTranslate() {
         if(indexTranslation < listTranslations.size())
             translate(listTranslations.get(indexTranslation));
         else
-            mBiography.setBiographyHtml(flowTextView.getText().toString());
+            mBiography.setBiographyHtml(mTranslatedText);
     }
 
     private void translate(String query) {
+        if(query.contains("<p>")) {
+            addFormat = true;
+
+            try {
+                query = query.substring(query.indexOf("<p>") + 3);
+            }catch (StringIndexOutOfBoundsException e) {
+                //skip this line
+                mTranslatedText = mTranslatedText.concat(getString(R.string.error_missing_translation));
+                indexTranslation++;
+                retyCount = 0;
+                addFormat = false;
+                lineTranslate();
+                return;
+            }
+        }
         TranslateApi service = TranslateApiServiceProvider.get();
         Call<ResultTranslate> call = service.translate(query, "de|en");
         call.enqueue(new Callback<ResultTranslate>() {
@@ -396,25 +529,54 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
             @Override
             public void onResponse(@NonNull Call<ResultTranslate> call, @NonNull Response<ResultTranslate> response) {
                 if (response.body() != null) {
+
+                    if (response.body().isQuotaFinished()) {
+                        mDataMngr.setMyMemoryQuotaUsed(System.currentTimeMillis() + C.TIME_12_HOUR);
+                        googleTranslate(mBiography.getBiographyHtml());
+                        return;
+                    }
+
                     ResponseTranslate translate = response.body().getResponseData();
 
-                    String html = "<p>" + translate.getTranslatedText() + "</p>";
+                    String str;
+                    if (addFormat)
+                        str = "<p>" + translate.getTranslatedText() + "</p>";
+                    else
+                        str = translate.getTranslatedText();
 
-                    flowTextView.setText(Html.fromHtml(flowTextView.getText() + html ));
+
+                    if (str.contains(" href=\"/de/glossar"))
+                        str = str.replace("href=\"/de/glossar", "href=\"https://www.stolpersteine-berlin.de/de/glossar");
+                    else if (str.contains(" href=\"/en/glossar")) {
+                        str = str.replace("href=\"/en/glossar", "href=\"https://www.stolpersteine-berlin.de/de/glossar");
+                    }
+
+                    // catch some conversion errors
+                    str = str.replaceAll("&lt;", "<");
+                    str = str.replaceAll("&gt;", ">");
+
+                    if (Commons.isNotNull(str)) {
+                        mTranslatedText = mTranslatedText.concat(str);
+                        flowTextView.setText(Html.fromHtml(mTranslatedText));
+                    }
                     indexTranslation++;
                     retyCount = 0;
+                    addFormat = false;
                     lineTranslate();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ResultTranslate> call, @NonNull Throwable t) {
-                if(retyCount < 3) {
+                if (retyCount < 5) {
                     retyCount++;
                     lineTranslate();  // retry the same line
-                }
+                } else
+                    Commons.Toast(BlockViewerActivity.this, R.string.error_translate, Commons.RED, Toast.LENGTH_LONG);
             }
         });
+
+
     }
 
 
@@ -474,6 +636,20 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
         return subtitle;
     }
 
+    private OnLinkClickListener linkListener = new OnLinkClickListener() {
+        @Override
+        public void onLinkClick(String url) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(intent);
+        }
+    };
+
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Log.d(TAG, "onLinkClick: ");
+        }
+    };
 
     /* ****** MVP METHODS **** */
 
@@ -555,7 +731,22 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
 
             if(!TextUtils.isEmpty(bio.getBiographyHtml())) {
                 hasText = true;
-                flowTextView.setText(Html.fromHtml(bio.getBiographyHtml()));
+                String text = bio.getBiographyHtml().replaceAll("<a href=\"/de/glossar#", "<a href=\"http://www.stolpersteine-berlin.de/de/glossar#");
+
+                // check and replace EN links while here
+                if(text.contains("href=\"/en/glossar"))
+                    text = text.replaceAll("<a href=\"/en/glossar#", "<a href=\"http://www.stolpersteine-berlin.de/en/glossar#");
+
+                flowTextView.setText(Html.fromHtml(text));
+
+//                flowTextView.setClickable(true);
+                flowTextView.setOnLinkClickListener(linkListener);
+                flowTextView.setOnClickListener(clickListener);
+
+                // TODO: 22/06/2018 make links work - change color so hidden for now
+//                TextPaint p = flowTextView.getTextPaint();
+//                p.linkColor = Color.BLACK;
+//                flowTextView.setLinkPaint(p);
 
                 // Can make this dynamic at some point
                 imageViews.add((ImageView) findViewById(R.id.image1));
@@ -570,6 +761,7 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
                 clipboardManager.setPrimaryClip(clipData);
 
                 translateBtn.setVisibility(View.VISIBLE);
+
 
             } else if (bio.getImagesList() != null) {
 

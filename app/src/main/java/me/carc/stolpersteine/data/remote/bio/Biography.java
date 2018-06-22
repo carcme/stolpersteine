@@ -31,7 +31,6 @@ public class Biography implements Parcelable {
     private String biographyHtml;
 
 
-
     public List<BioImages> getImagesList() {
         return imagesList;
     }

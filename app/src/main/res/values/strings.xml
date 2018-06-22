@@ -2,12 +2,23 @@
     <string name="app_name">Stolpersteine</string>
     <string name="app_name_version">Stolpersteine %1$s</string>
 
+    <string name="feedbackEmail" translatable="false">carcmedev@gmail.com</string>
+    <string name="website" translatable="false">https://www.stolpersteine-berlin.de</string>
+    <string name="bugtracker" translatable="false">https://github.com/carcme/stolpersteine/issues</string>
+
+
     <string name="share_subject">Stolpersteine | The World\'s Largest Decentralized Memorial</string>
 
     <string name="play_store_link">https://play.google.com/store/apps/details?id=%1$s</string>
 
 
     <string name="error_no_maps_app">Could not find any apps that provide directions.</string>
+    <string name="error_missing_translation"><![CDATA[\"<MISSING TRANSLATION>\"]]></string>
+    <string name="error_playstore_not_found">Couldn\'t find PlayStore on this device</string>
+    <string name="error_image_load">There was an error getting the image</string>
+    <string name="error_translate">There was an error getting the translation</string>
+
+    <string name="no_results_found">No results Found!\n\nExpand the map area or use the search feature above</string>
 
 
     <string name="shared_string_about">About</string>
@@ -40,13 +51,8 @@
     <string name="translateEnableData">Enable</string>
 
 
-    <string name="error_playstore_not_found">Couldn\'t find PlayStore on this device</string>
-    <string name="error_image_load">There was an error getting the image</string>
-    <string name="error_translate">There was an error getting the translation</string>
 
-    <string name="no_results_found">No results Found!\n\nExpand the map area or use the search feature above</string>
-
-    <string name="updating_database">Populating Database… please be patient</string>
+    <string name="updating_database">Populating Database… please be patient. Search will be available soon</string>
     <string name="updated_database">Database Update Complete</string>
 
     <string name="debug_error_image_load">Retry %1$d</string>
@@ -55,11 +61,6 @@
 
     <!-- SETTINGS -->
 
-    <string name="feedbackEmail" translatable="false">carcmedev@gmail.com</string>
-    <string name="feedbackEmailSubject" translatable="false">carcmedev@gmail.com</string>
-
-    <string name="website" translatable="false">https://www.stolpersteine-berlin.de</string>
-    <string name="bugtracker" translatable="false">https://github.com/carcme/btown_mvp/issues</string>
 
     <string name="author">© 2018 Carc Me Dev</string>
     <string name="licence">Free Software License: GPLv3</string>
@@ -90,7 +91,6 @@ The app aims to show you where the Stumbling Blocks are in Berlin and some infor
 <p>If you find any issues, please report them at <a href="%1$s">the issue tracker</a>.</p>
 ]]>
 </string>
-    <string name="aboutSettingsBugtracker" translatable="false">https://github.com/carcme/btown_mvp/issues</string>
 
     <string name="about_lib_attr">
         <![CDATA[
@@ -119,7 +119,6 @@ The app aims to show you where the Stumbling Blocks are in Berlin and some infor
     <string name="feedback_request_title">Send Feedback</string>
     <string name="feedback_request_hint">Tell us where we can improve&#8230;</string>
     <string name="feedbackChooserTitle">Send Feedback Via</string>
-
 
 
 </resources>

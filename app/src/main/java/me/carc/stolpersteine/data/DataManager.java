@@ -28,19 +28,21 @@ public class DataManager {
         mSharedPrefsHelper = sharedPrefsHelper;
     }
 
+
+
     public void setZoom(float zoom) {
-        mSharedPrefsHelper.put(SharedPrefsHelper.PREF_KEY_ZOOM, zoom);
+        mSharedPrefsHelper.put(SharedPrefsHelper.USER_KEY_ZOOM, zoom);
     }
     public float getZoom(){
-        return mSharedPrefsHelper.get(SharedPrefsHelper.PREF_KEY_ZOOM, 16f);
+        return mSharedPrefsHelper.get(SharedPrefsHelper.USER_KEY_ZOOM, 16f);
     }
 
     public void setLastPosition(GeoPoint location) {
         String gson = new Gson().toJson(location);
-        mSharedPrefsHelper.put(SharedPrefsHelper.PREF_KEY_LOCATION, gson);
+        mSharedPrefsHelper.put(SharedPrefsHelper.USER_KEY_LOCATION, gson);
     }
     public GeoPoint getLastPosition(){
-        String location = mSharedPrefsHelper.get(SharedPrefsHelper.PREF_KEY_LOCATION, null);
+        String location = mSharedPrefsHelper.get(SharedPrefsHelper.USER_KEY_LOCATION, null);
         GeoPoint point = new Gson().fromJson(location, new TypeToken<GeoPoint>() {}.getType());
         if(Commons.isNull(point)) {
             point = new GeoPoint(52.514489, 13.350240);
@@ -48,18 +50,36 @@ public class DataManager {
         return point;
     }
 
+
+    public void setGoogleTranslate(boolean useGoogle) {
+        mSharedPrefsHelper.put(SharedPrefsHelper.USER_KEY_LANGUAGE, useGoogle);
+    }
+    public boolean useGoogleTranslate(){
+        return mSharedPrefsHelper.get(SharedPrefsHelper.PREF_KEY_TRANSLATE, false);
+    }
+
+
     public void setUserLanguage(String lang) {
-        mSharedPrefsHelper.put(SharedPrefsHelper.PREF_KEY_LANGUAGE, lang);
+        mSharedPrefsHelper.put(SharedPrefsHelper.USER_KEY_LANGUAGE, lang);
     }
     public String getUserLanguage(){
-        return mSharedPrefsHelper.get(SharedPrefsHelper.PREF_KEY_LANGUAGE, null);
+        return mSharedPrefsHelper.get(SharedPrefsHelper.USER_KEY_LANGUAGE, null);
     }
 
 
     public boolean hasPermissions(){
-        return mSharedPrefsHelper.get(SharedPrefsHelper.PREF_KEY_PERMISSIONS_REQ, false);
+        return mSharedPrefsHelper.get(SharedPrefsHelper.USER_KEY_PERMISSIONS_REQ, false);
     }
     public void permissionGranted(boolean granted) {
-        mSharedPrefsHelper.put(SharedPrefsHelper.PREF_KEY_PERMISSIONS_REQ, granted);
+        mSharedPrefsHelper.put(SharedPrefsHelper.USER_KEY_PERMISSIONS_REQ, granted);
+    }
+
+
+    public void setMyMemoryQuotaUsed(long myMemoryQuotaUsed) {
+        mSharedPrefsHelper.put(SharedPrefsHelper.USER_KEY_QUOTA_TIME, myMemoryQuotaUsed);
+    }
+    public boolean isMyMemoryQuotaUsed() {
+        long time = mSharedPrefsHelper.get(SharedPrefsHelper.USER_KEY_QUOTA_TIME, 0);
+        return time > System.currentTimeMillis();
     }
 }

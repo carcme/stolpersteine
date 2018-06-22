@@ -1,0 +1,110 @@
+<resources>
+    <string name="app_name">Stolpersteine</string>
+    <string name="app_name_version">Stolpersteine %1$s</string>
+
+    <string name="share_subject">Stolpersteine | Die größte dezentralisierte Gedenkstätte der Welt</string>
+
+    <string name="play_store_link">https://play.google.com/store/apps/details?id=%1$s</string>
+
+
+    <string name="error_no_maps_app">Auf dem Handy konnte kein Online-Kartendienst gefunden werden.</string>
+    <string name="error_missing_translation"><![CDATA[\"<FEHLENDE ÜBERSETZUNG>\"]]></string>
+    <string name="error_playstore_not_found">Auf dem Handy ist kein PlayStore installiert</string>
+    <string name="error_image_load">Fehler beim Laden des Bildes</string>
+    <string name="error_translate">Fehler beim Laden der Übersetzung</string>
+
+    <string name="no_results_found">Keine Ergebnisse gefunden!\n\nErweitere den Such-Radius oder nutze das Suchfeld</string>
+
+
+    <string name="shared_string_about">Über uns</string>
+    <string name="shared_string_add_comment">Füge einen Kommentar hinzu</string>
+    <string name="shared_string_address">Adresse</string>
+    <string name="shared_string_donate">Spenden</string>
+    <string name="shared_string_error">"Fehler!"</string>
+    <string name="shared_string_feedback">Feedback</string>
+    <string name="shared_string_phone">Telefon</string>
+    <string name="shared_string_rate">Bewertung</string>
+    <string name="shared_string_route">Route</string>
+    <string name="shared_string_save">Speichern</string>
+    <string name="shared_string_send">Senden</string>
+    <string name="shared_string_send_to">Senden an</string>
+    <string name="shared_string_settings">Einstellungen</string>
+    <string name="shared_string_share">Teilen</string>
+    <string name="shared_string_success">Erfolg</string>
+    <string name="shared_string_thankyou">Vielen Dank!</string>
+    <string name="shared_string_website">Webseite</string>
+
+    <string name="search_all_hint">Alle durchsuchen</string>
+
+
+    <string name="stolperstein_image">Stolperstein Bild</string>
+
+
+    <string name="translateTitle">Problem bei der Übersetzung</string>
+    <string name="translateMessage">Kann nicht übersetzt werden. Bitte installiere Google Übersetzer oder schalte das Internet auf deinem Telefon an</string>
+    <string name="translateInstallGoogle">Installieren</string>
+    <string name="translateEnableData">Aktivieren</string>
+
+
+    <string name="updating_database">Datenbank lädt… bitte etwas Geduld. Die Suche kann gleich losgehen.</string>
+    <string name="updated_database">Datenbank Update vollständig</string>
+
+    <string name="debug_error_image_load">Erneut versuchen %1$d</string>
+
+
+    <!-- SETTINGS -->
+
+
+    <string name="author">© 2018 Carc Me Dev</string>
+    <string name="licence">Free Software License: GPLv3</string>
+
+
+    <string name="aboutSettingsDescription"><![CDATA[
+
+<h3>Stolperstein?</h3>
+<p>Stolpersteine ist ein Kunstprojekt von Gunter Demnig. Was 1996 begann, freut sich heute über 67.000 Steine in 22 Ländern. Das macht die Stolpersteine zur größten dezentralisierten Gedenkstätte der Welt.</p>
+
+<p> Die Steine gedenken Opfern des Holocaust und den letzten Orten, an denen sie aus freien Stücken gelebt haben, bevor sie verschleppt, interniert und umgebracht wurden.</p>
+
+<h3>Herkunft des Namen</h3>
+
+<p>Das Wort Stolperstein kann im Deutschen auf ein potentielles Problem hindeuten. Etwas, das im Weg ist und beseitigt werden muss. Der Name des Kunstprojekts und dessen teils negative und antisemitische Konnotation ist bewusst gewählt. Er soll zum Nachdenken und Diskutieren anregen.</p>
+
+<p>Stolpersteine sind nicht leicht zu finden. Sie sind am Eingang verschiedener Wohnhäuser so platziert, dass man nur beim genauen Hinschauen auf sie aufmerksam wird. Mit der App findest du die Steine ganz leicht und erhältst zusätzliche Informationen zu den traurigen Schicksalen der einstigen Anwohner.</p>
+
+]]></string>
+
+    <string name="aboutSettingsIssueReporting">
+    <![CDATA[
+<h3>Issues</h3>
+<p>Wenn du einen Fehler findest, melde ihn uns bitte hier <a href="%1$s">the issue tracker</a>.</p>
+]]>
+</string>
+
+    <string name="about_lib_attr">
+        <![CDATA[
+        Alle Informationen zur Verfügung gestellt von <a href src=\"https://www.stolpersteine-berlin.de\">stolpersteine-berlin.de</a>
+        ]]></string>
+
+
+    <string name="tab_libraries">Sammlungen</string>
+
+    <string name="visit_website">Webseite</string>
+
+
+    <!--FEEDBACK DIALOG-->
+    <string name="rating_dialog_experience">Bewertungen machen einen großen Unterschied…könntest du uns ein paar Sterne geben?</string>
+    <string name="rating_dialog_maybe_later">Vielleicht später</string>
+    <string name="rating_dialog_never">Niemals</string>
+    <string name="rating_dialog_feedback_title">Feedback</string>
+    <string name="rating_dialog_submit">schicken</string>
+    <string name="rating_dialog_cancel">Abbrechen</string>
+    <string name="rating_dialog_suggestions">Schlage uns Verbesserungen vor und wir machen uns gleich an die Arbeit!</string>
+
+    <string name="ratings_request_title">Hilf uns und dem Projekt, indem du einen Kommentar hinterlässt</string>
+    <string name="feedback_request_title">Schicke uns dein Feedback</string>
+    <string name="feedback_request_hint">Sag’ uns, was wir besser machen können&#8230;</string>
+    <string name="feedbackChooserTitle">Schicke dein Feedback via </string>
+
+
+</resources>

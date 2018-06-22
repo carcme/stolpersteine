@@ -11,7 +11,7 @@ import me.carc.stolpersteine.R;
 
 public enum CarcAppsMenu {
 
-    BTOWN(R.mipmap.ic_launcher_btown, R.string.appTitleITimer, R.string.appDescITimer, "btown"),
+    BTOWN(R.mipmap.ic_launcher_btown, R.string.appTitleBtown, R.string.appDescBtown, "btown"),
     ITIMER(R.mipmap.ic_launcher_timer, R.string.appTitleITimer, R.string.appDescITimer, "carcintervaltimer"),
     FAKER(R.mipmap.ic_launcher_fc, R.string.appTitleFakeCall, R.string.appDescFakeCall, "fakecallandsms_mvp"),
     AGD(R.mipmap.ic_launcher_agd, R.string.appTitleAGD, R.string.appDescAGB, "anygivendate"),

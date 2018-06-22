@@ -35,7 +35,8 @@ public class ApplicationModule {
 
     @Provides
     SharedPreferences provideSharedPrefs() {
-        return mApplication.getSharedPreferences("demo-prefs", Context.MODE_PRIVATE);
+        String fileName = mApplication.getPackageName() + "_preferences";
+        return mApplication.getSharedPreferences(fileName, Context.MODE_PRIVATE);
     }
 
 }

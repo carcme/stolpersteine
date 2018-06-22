@@ -2,4 +2,9 @@
 <resources>
 
 
+    <string name="pref_translate_title">Translations</string>
+    <string name="pref_translate_summaryOn">Use Google Translate (requires install)</string>
+    <string name="pref_translate_summaryOff">Translate in-app using \'MyMemory\' and Google</string>
+
+
 </resources>

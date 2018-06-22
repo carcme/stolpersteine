@@ -60,14 +60,10 @@ public class C {
     public static Integer SCREEN_HEIGHT;
     public static Float   DENSITY;
 
-
-    public static final int TIME_ONE_SECOND = 1000;
-    private static final int TIME_ONE_MINUTE = 60 * TIME_ONE_SECOND;
-    private static final int TIME_ONE_HOUR = TIME_ONE_MINUTE * 60;
-    private static final int TIME_ONE_DAY = TIME_ONE_HOUR * 24;
-    public static final int TIME_ONE_WEEK = TIME_ONE_DAY * 7;
-
-
-    public final static String ANSWERS_ERROR = "ANSWERS_ERROR";
-
+    private static final long TIME_ONE_SECOND   = 1000;
+    private static final long TIME_ONE_MINUTE   = TIME_ONE_SECOND * 60;
+    private static final long TIME_ONE_HOUR     = TIME_ONE_MINUTE * 60;
+    public  static final long TIME_12_HOUR      = TIME_ONE_HOUR * 12;
+    private static final long TIME_ONE_DAY      = TIME_ONE_HOUR * 24;
+    private static final long TIME_ONE_WEEK     = TIME_ONE_DAY * 7;
 }

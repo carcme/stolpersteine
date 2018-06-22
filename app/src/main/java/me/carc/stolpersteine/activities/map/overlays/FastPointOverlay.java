@@ -65,36 +65,7 @@ public class FastPointOverlay {
 
             for (Stolpersteine element : mStolpersteines) {
                 if (element.getId().equals(((LabelledGeoPoint) points1.get(point)).getId())) {
-
                     mCallback.onPointClicked((LabelledGeoPoint) points1.get(point), element);
-/*                    Context ctx = mapView.getContext();
-
-                    CoordinatorLayout coord = (CoordinatorLayout)mapView.getParent();
-
-                    final Snackbar snackBar = Snackbar.make(coord, ((LabelledGeoPoint) points1.get(point)).getLabel(), Snackbar.LENGTH_LONG);
-
-                    // Hide the Snackbar textview
-                    Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) snackBar.getView();
-                    TextView textView = layout.findViewById(android.support.design.R.id.snackbar_text);
-                    textView.setVisibility(View.INVISIBLE);
-
-                    LayoutInflater inflater = LayoutInflater.from(ctx);
-                    View snackView = inflater.inflate(R.layout.custom_snackbar, null);
-                    ((TextView)snackView.findViewById(R.id.snackFullName)).setText(((LabelledGeoPoint) points1.get(point)).getLabel());
-                    ((TextView)snackView.findViewById(R.id.snackAddress)).setText(((LabelledGeoPoint) points1.get(point)).getAddress());
-                    Button btn = snackView.findViewById(R.id.viewBtn);
-                    btn.setOnClickListener(v -> {
-                        Intent intent = new Intent(v.getContext(), BlockViewerActivity.class);
-                        intent.putExtra(BlockViewerActivity.BLOCK_DATA, element);
-                        v.getContext().startActivity(intent);
-                    });
-
-                    snackView.setBackgroundColor(ctx.getResources().getColor(R.color.colorPrimary));
-                    layout.addView(snackView, 0);
-                    layout.setPadding(0,0,0,0);
-
-                    snackBar.show();
-*/
                     break;
                 }
             }

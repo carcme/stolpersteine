@@ -157,7 +157,7 @@ public class MapActivity extends MvpBaseActivity implements MapMvpView, MapEvent
 
     @Override
     public void onBackPressed() {
-        if(mSnackBar.isShown())
+        if(Commons.isNotNull(mSnackBar) && mSnackBar.isShown())
             mSnackBar.dismiss();
         else
             super.onBackPressed();
@@ -199,7 +199,7 @@ public class MapActivity extends MvpBaseActivity implements MapMvpView, MapEvent
 
     @OnClick(R.id.fabLocation)
     void onFindLocation() {
-      mPresenter.zoomToMyLocation(mLocationOverlay.getMyLocation());
+        mPresenter.zoomToMyLocation(mLocationOverlay.getMyLocation());
     }
 
 

@@ -2,33 +2,20 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:key="pref_key_location"
-        android:title="@string/my_location">
+        android:key="pref_key_cat_translate"
+        android:title="Translation">
 
         <CheckBoxPreference
             android:width="24dp"
             android:height="24dp"
-            android:icon="@drawable/ic_block_round"
-            android:defaultValue="true"
-            android:key="pref_key_use_gps"
-            android:summary="Summary"
-            android:title="Title" />
+            android:key="pref_key_translate"
+            android:defaultValue="false"
+            android:title="@string/pref_translate_title"
+            android:summaryOn="@string/pref_translate_summaryOn"
+            android:summaryOff="@string/pref_translate_summaryOff"/>
 
-    </PreferenceCategory>
+<!--            android:icon="@drawable/ic_translate" -->
 
-
-    <PreferenceCategory
-        android:key="pref_key_display"
-        android:title="ToDo">
-
-        <CheckBoxPreference
-            android:width="24dp"
-            android:height="24dp"
-            android:icon="@drawable/ic_block_round"
-            android:defaultValue="true"
-            android:key="pref_key_tours"
-            android:summary="Summary"
-            android:title="Title" />
 
 <!--
         <ListPreference
