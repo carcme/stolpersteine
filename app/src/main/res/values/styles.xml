@@ -6,6 +6,12 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:dialogTheme">@style/DialogTheme</item>
+        <item name="android:alertDialogTheme">@style/DialogTheme</item>
+
+        <item name="android:windowAnimationStyle">@style/DialogActivity</item>
+
     </style>
 
     <style name="PermissionsTheme" parent="Base.Theme.AppCompat">
@@ -88,6 +94,10 @@
     <style name="DialogAnimation" parent="@android:style/Animation.Dialog">
         <item name="android:windowEnterAnimation">@anim/scale_up</item>
         <item name="android:windowExitAnimation">@anim/scale_down</item>
+    </style>
+
+    <style name="DialogActivity" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/slide_in_right</item>
     </style>
 
 
