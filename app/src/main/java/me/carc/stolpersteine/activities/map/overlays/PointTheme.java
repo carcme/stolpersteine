@@ -56,7 +56,6 @@ public final class PointTheme implements PointOverlay.PointAdapter {
 
     /**
      * NOTE: this iterator will be called very frequently, avoid complicated code.
-     * @return
      */
     @Override
     public Iterator<IGeoPoint> iterator() {

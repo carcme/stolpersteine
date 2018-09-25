@@ -1,6 +1,8 @@
 package me.carc.stolpersteine.common.views.flowtextview.helpers;
 
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 import me.carc.stolpersteine.common.views.flowtextview.models.Area;
@@ -29,7 +31,7 @@ public class CollisionHelper {
         for (Obstacle obstacle : obstacles) {
 
             if(obstacle.topLefty > lineYbottom || obstacle.bottomRighty < lineYtop){
-
+                Log.d("IGNORE", "");
             }else{
 
                 Area leftArea = new Area();
@@ -37,7 +39,7 @@ public class CollisionHelper {
 
                 for (Obstacle innerObstacle : obstacles) {
                     if(innerObstacle.topLefty > lineYbottom || innerObstacle.bottomRighty < lineYtop){
-
+                        Log.d("IGNORE", "");
                     }else{
                         if(innerObstacle.topLeftx < obstacle.topLeftx){
                             leftArea.x1 = innerObstacle.bottomRightx;
@@ -54,7 +56,7 @@ public class CollisionHelper {
 
                 for (Obstacle innerObstacle : obstacles) {
                     if(innerObstacle.topLefty > lineYbottom || innerObstacle.bottomRighty < lineYtop){
-
+                        Log.d("IGNORE", "");
                     }else{
                         if(innerObstacle.bottomRightx > obstacle.bottomRightx){
                             rightArea.x2 = innerObstacle.topLeftx;

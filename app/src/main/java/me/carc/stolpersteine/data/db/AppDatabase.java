@@ -32,7 +32,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, App.DATABASE_NAME)
 //                            .addMigrations(Migrations.MIGRATION_1_2)
-//                            .fallbackToDestructiveMigration()  // TODO: REMOVE FOR RELEASE
+                            .fallbackToDestructiveMigration()  // TODO: REMOVE FOR RELEASE
                             .build();
                 }
             }

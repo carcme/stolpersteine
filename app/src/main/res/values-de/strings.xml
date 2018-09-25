@@ -33,6 +33,7 @@
     <string name="shared_string_success">Erfolg</string>
     <string name="shared_string_thankyou">Vielen Dank!</string>
     <string name="shared_string_website">Webseite</string>
+    <string name="shared_string_view">View</string>
 
     <string name="search_all_hint">Alle durchsuchen</string>
 
@@ -105,6 +106,7 @@
     <string name="feedback_request_title">Schicke uns dein Feedback</string>
     <string name="feedback_request_hint">Sag’ uns, was wir besser machen können&#8230;</string>
     <string name="feedbackChooserTitle">Schicke dein Feedback via </string>
+    <string name="add_your_message_here">Fügen Sie Ihre Nachricht hier hinzu</string>
 
 
 </resources>

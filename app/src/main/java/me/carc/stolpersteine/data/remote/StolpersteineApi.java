@@ -20,7 +20,4 @@ public interface StolpersteineApi {
     Call<List<Stolpersteine>> getStolpersteines(@Query("offset") int offset,
                                                 @Query("limit") int limit);
 
-
-
 }
-

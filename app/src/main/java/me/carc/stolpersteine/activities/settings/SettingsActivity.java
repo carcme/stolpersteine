@@ -29,11 +29,9 @@ import me.carc.stolpersteine.fragments.settings.SettingsPagerFragment;
 public class SettingsActivity extends MvpBaseActivity implements SettingsMvpView, AboutFragment.BtnClickListener {
     private static final String TAG = SettingsActivity.class.getName();
 
-
     @Inject SettingsPresenter mPresenter;
     @Inject SharedPrefsHelper mSharePrefs;
     @Inject DataManager mDataMngr;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

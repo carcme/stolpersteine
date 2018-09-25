@@ -28,6 +28,7 @@ public class BlockListAdapter extends PagedListAdapter<Stolpersteine, BlockListA
         super(Stolpersteine.DIFF_CALLBACK);
     }
 
+    @SuppressWarnings("Annotator")
     @Override
     public @NonNull
     PoiListHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {

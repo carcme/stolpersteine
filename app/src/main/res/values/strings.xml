@@ -38,6 +38,7 @@
     <string name="shared_string_success">Success</string>
     <string name="shared_string_thankyou">Thank you!</string>
     <string name="shared_string_website">Website</string>
+    <string name="shared_string_view">View</string>
 
     <string name="search_all_hint">Type to search all</string>
 
@@ -119,6 +120,7 @@ The app aims to show you where the Stumbling Blocks are in Berlin and some infor
     <string name="feedback_request_title">Send Feedback</string>
     <string name="feedback_request_hint">Tell us where we can improve&#8230;</string>
     <string name="feedbackChooserTitle">Send Feedback Via</string>
+    <string name="add_your_message_here">Add your message here</string>
 
 
 </resources>

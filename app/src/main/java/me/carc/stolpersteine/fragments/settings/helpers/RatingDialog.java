@@ -217,22 +217,14 @@ public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingB
     }
 
     private void setRatingThresholdClearedListener() {
-        builder.ratingThresholdClearedListener = new Builder.RatingThresholdClearedListener() {
-            @Override
-            public void onThresholdCleared(RatingDialog ratingDialog, float rating, boolean thresholdCleared) {
-                openPlaystore(context);
-                dismiss();
-            }
+        builder.ratingThresholdClearedListener = (ratingDialog, rating, thresholdCleared) -> {
+            openPlaystore(context);
+            dismiss();
         };
     }
 
     private void setRatingThresholdFailedListener() {
-        builder.ratingThresholdFailedListener = new Builder.RatingThresholdFailedListener() {
-            @Override
-            public void onThresholdFailed(RatingDialog ratingDialog, float rating, boolean thresholdCleared) {
-                openForm();
-            }
-        };
+        builder.ratingThresholdFailedListener = (ratingDialog, rating, thresholdCleared) -> openForm();
     }
 
     private void openForm() {

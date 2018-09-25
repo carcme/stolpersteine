@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import me.carc.stolpersteine.R;
@@ -37,8 +38,9 @@ public class Commons {
         Toast(context, context.getString(resId), bgColor, duration);
     }
 
+    @SuppressWarnings("Annotator")
     public static void Toast(Context context, String msg, @ColorInt int bgColor, int duration) {
-        final View v = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+        final View v = ((LayoutInflater) Objects.requireNonNull(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)))
                 .inflate(R.layout.custom_toast, null);
 
         TextView tv = v.findViewById(R.id.toastMsg);
@@ -46,7 +48,7 @@ public class Commons {
         tv.setTextColor(Color.WHITE);
 
         Drawable background = context.getDrawable(R.drawable.toast_background);
-        background.setTint(bgColor);
+        Objects.requireNonNull(background).setTint(bgColor);
         tv.setBackground(background);
 
         final Toast toast = new Toast(context);
@@ -57,7 +59,7 @@ public class Commons {
 
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        NetworkInfo networkInfo = Objects.requireNonNull(connectivityManager).getActiveNetworkInfo();
         return networkInfo != null && (networkInfo.isConnected());
     }
 

@@ -1,15 +1,10 @@
 package me.carc.stolpersteine.data.remote;
 
-import android.support.annotation.NonNull;
-
-import java.io.IOException;
 import java.util.Locale;
 
 import okhttp3.HttpUrl;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -27,24 +22,21 @@ public class StolpersteineApiServiceProvider {
     private static StolpersteineApi createService() {
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(@NonNull Chain chain) throws IOException {
-                Request original = chain.request();
-                HttpUrl originalHttpUrl = original.url();
+        httpClient.addInterceptor(chain -> {
+            Request original = chain.request();
+            HttpUrl originalHttpUrl = original.url();
 
-                HttpUrl url = originalHttpUrl.newBuilder()
-                        .addQueryParameter("city", StolpersteineApi.ONLY_BERLIN)
-                        .build();
+            HttpUrl url = originalHttpUrl.newBuilder()
+                    .addQueryParameter("city", StolpersteineApi.ONLY_BERLIN)
+                    .build();
 
-                // Request customization: add request headers
-                Request.Builder requestBuilder = original.newBuilder()
-                        .header("Accept-Language", Locale.getDefault().getLanguage())
-                        .url(url);
+            // Request customization: add request headers
+            Request.Builder requestBuilder = original.newBuilder()
+                    .header("Accept-Language", Locale.getDefault().getLanguage())
+                    .url(url);
 
-                Request request = requestBuilder.build();
-                return chain.proceed(request);
-            }
+            Request request = requestBuilder.build();
+            return chain.proceed(request);
         });
 
         Retrofit retrofit = new Retrofit.Builder()

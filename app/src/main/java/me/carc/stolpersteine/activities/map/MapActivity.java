@@ -57,6 +57,7 @@ import me.carc.stolpersteine.fragments.settings.SendFeedback;
  * Created by bamptonm on 08/06/2018.
  */
 
+@SuppressWarnings("ALL")
 public class MapActivity extends MvpBaseActivity implements MapMvpView, MapEventsReceiver, FastPointOverlay.OnPointClicked {
     private static final String TAG = MapActivity.class.getName();
 
@@ -207,6 +208,7 @@ public class MapActivity extends MvpBaseActivity implements MapMvpView, MapEvent
     /* ****** CALLBACK METHODS **** */
 
 
+    @SuppressWarnings("Annotator")
     @Override
     public void onPointClicked(final LabelledGeoPoint point, final Stolpersteine element) {
 
@@ -217,8 +219,8 @@ public class MapActivity extends MvpBaseActivity implements MapMvpView, MapEvent
         TextView textView = layout.findViewById(android.support.design.R.id.snackbar_text);
         textView.setVisibility(View.INVISIBLE);
 
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View snackView = inflater.inflate(R.layout.custom_snackbar, null);
+        View snackView = LayoutInflater.from(this).inflate(R.layout.custom_snackbar, layout, false);
+
         ((TextView)snackView.findViewById(R.id.snackFullName)).setText(point.getLabel());
         ((TextView)snackView.findViewById(R.id.snackAddress)).setText(point.getAddress());
         Button btn = snackView.findViewById(R.id.viewBtn);
@@ -298,10 +300,10 @@ public class MapActivity extends MvpBaseActivity implements MapMvpView, MapEvent
             runOnUiThread(() -> {
                 if(disableLookups) {
                     Commons.Toast(MapActivity.this, R.string.updating_database, Commons.RED, Toast.LENGTH_SHORT);
-                    fabSearch.setVisibility(View.INVISIBLE);
+                    if(Commons.isNotNull(fabSearch)) fabSearch.setVisibility(View.INVISIBLE);
                 } else {
                     Commons.Toast(MapActivity.this, R.string.updated_database, Commons.GREEN, Toast.LENGTH_LONG);
-                    fabSearch.setVisibility(View.VISIBLE);
+                    if(Commons.isNotNull(fabSearch))fabSearch.setVisibility(View.VISIBLE);
                 }
             });
         });

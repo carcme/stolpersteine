@@ -51,7 +51,7 @@
         android:background="@color/transparent"
         android:textColor="@color/colorAccent"
         android:layout_alignParentEnd="true"
-        android:text="View"/>
+        android:text="@string/shared_string_view"/>
 
 
 </RelativeLayout>

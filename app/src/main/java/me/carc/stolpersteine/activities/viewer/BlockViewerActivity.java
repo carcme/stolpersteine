@@ -35,6 +35,7 @@ import com.google.gson.JsonArray;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -411,9 +412,9 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
         Call<JsonArray> call = service.translate(query, "en", "de");
         call.enqueue(new Callback<JsonArray>() {
             @Override
-            public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
+            public void onResponse(@NonNull Call<JsonArray> call, @NonNull Response<JsonArray> response) {
                 if (response.body() != null) {
-                    JsonArray array1 = response.body().get(0).getAsJsonArray();
+                    JsonArray array1 = Objects.requireNonNull(response.body()).get(0).getAsJsonArray();
 
                     String translatedText = "";
                     for (int i = 0; i < array1.size(); i++) {
@@ -444,7 +445,7 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
             }
 
             @Override
-            public void onFailure(Call<JsonArray> call, Throwable t) {
+            public void onFailure(@NonNull Call<JsonArray> call, @NonNull Throwable t) {
                 flowTextView.setText(mBiography.getBiographyHtml());
                 Commons.Toast(BlockViewerActivity.this, R.string.error_translate, Commons.RED, Toast.LENGTH_LONG);
             }
@@ -557,6 +558,7 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
 
                     if (Commons.isNotNull(str)) {
                         mTranslatedText = mTranslatedText.concat(str);
+                        if(Commons.isNull(flowTextView)) return;
                         flowTextView.setText(Html.fromHtml(mTranslatedText));
                     }
                     indexTranslation++;
@@ -575,10 +577,7 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
                     Commons.Toast(BlockViewerActivity.this, R.string.error_translate, Commons.RED, Toast.LENGTH_LONG);
             }
         });
-
-
     }
-
 
     @OnClick(R.id.fabViewer)
     void exit() {
@@ -636,20 +635,12 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
         return subtitle;
     }
 
-    private OnLinkClickListener linkListener = new OnLinkClickListener() {
-        @Override
-        public void onLinkClick(String url) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            startActivity(intent);
-        }
+    private OnLinkClickListener linkListener = url -> {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(intent);
     };
 
-    private View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Log.d(TAG, "onLinkClick: ");
-        }
-    };
+    private View.OnClickListener clickListener = v -> Log.d(TAG, "onLinkClick: ");
 
     /* ****** MVP METHODS **** */
 
@@ -761,7 +752,6 @@ public class BlockViewerActivity extends MvpBaseActivity implements BlockViewerM
                 clipboardManager.setPrimaryClip(clipData);
 
                 translateBtn.setVisibility(View.VISIBLE);
-
 
             } else if (bio.getImagesList() != null) {
 

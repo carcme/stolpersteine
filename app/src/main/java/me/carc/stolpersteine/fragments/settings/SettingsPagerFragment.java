@@ -29,6 +29,7 @@ public class SettingsPagerFragment extends Fragment {
     private static final int CARC_TAB       = 3;
     private static final int TAB_COUNT      = CARC_TAB + 1;
 
+    @SuppressWarnings("Annotator")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_about_main, container, false);

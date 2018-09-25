@@ -24,6 +24,8 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -99,6 +101,7 @@ public class ImageDialog extends DialogFragment {
         setStyle(STYLE_NO_FRAME, R.style.Dialog_FilledFullscreen);
     }
 
+   @SuppressWarnings("Annotator")
    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.image_dialog_layout, container, false);
@@ -133,7 +136,7 @@ public class ImageDialog extends DialogFragment {
 
     @SuppressLint("Range")
     private void loadNetworkImage() {
-        String loadString = getArguments().getString(IMAGE_URL);
+        String loadString = Objects.requireNonNull(getArguments()).getString(IMAGE_URL);
         // Crashlytics  #138 - check user hasn't got bored and left
         if(getActivity() != null)
             Glide.with(this)
@@ -149,7 +152,7 @@ public class ImageDialog extends DialogFragment {
         @Override
         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
             if (retryCount != 0) {
-                Commons.Toast(getActivity(), String.format(getString(R.string.debug_error_image_load), retryCount), Commons.RED, Toast.LENGTH_SHORT);
+                Commons.Toast(Objects.requireNonNull(getActivity()), String.format(getString(R.string.debug_error_image_load), retryCount), Commons.RED, Toast.LENGTH_SHORT);
                 loadNetworkImage();
                 retryCount--;
                 return true;

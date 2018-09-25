@@ -38,6 +38,7 @@ public class CarcFragment extends Fragment {
 
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
 
+    @SuppressWarnings("Annotator")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

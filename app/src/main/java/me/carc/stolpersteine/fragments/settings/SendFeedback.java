@@ -85,29 +85,23 @@ public class SendFeedback {
 
                 .negativeButtonTextColor(R.color.colorPrimaryDark)
                 .negativeButtonBackgroundColor(R.drawable.rate_button_selector_negative)
-                .onThresholdCleared(new RatingDialog.Builder.RatingThresholdClearedListener() {
-                    @Override
-                    public void onThresholdCleared(RatingDialog dlg, float rating, boolean thresholdCleared) {
+                .onThresholdCleared((dlg, rating, thresholdCleared) -> {
 
-                        try {
-                            ctx.startActivity(IntentUtils.openPlayStore(ctx));
-                        } catch (ActivityNotFoundException ex) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-                            builder.setTitle(R.string.shared_string_error);
-                            builder.setMessage(R.string.error_playstore_not_found);
-                            dlg.show();
+                    try {
+                        ctx.startActivity(IntentUtils.openPlayStore(ctx));
+                    } catch (ActivityNotFoundException ex) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+                        builder.setTitle(R.string.shared_string_error);
+                        builder.setMessage(R.string.error_playstore_not_found);
+                        dlg.show();
 
-                        }
-                        dlg.dismiss();
                     }
+                    dlg.dismiss();
                 })
 
-                .onRatingBarFormSumbit(new RatingDialog.Builder.RatingDialogFormListener() {
-                    @Override
-                    public void onFormSubmitted(String feedback) {
-                        sendFeedBack(ctx, feedback);
-                        Toast.makeText(ctx, R.string.shared_string_thankyou, Toast.LENGTH_SHORT).show();
-                    }
+                .onRatingBarFormSumbit(feedback -> {
+                    sendFeedBack(ctx, feedback);
+                    Toast.makeText(ctx, R.string.shared_string_thankyou, Toast.LENGTH_SHORT).show();
                 }).build();
 
         ratingDialog.show();

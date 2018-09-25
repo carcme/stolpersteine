@@ -29,6 +29,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -101,13 +102,12 @@ public class ImageUtils {
     }
 
     public static Drawable drawableFromVectorDrawable(@NonNull Context context, @DrawableRes int id) {
-        Drawable vectorDrawable = VectorDrawableCompat.create(context.getResources(), id, null);
-        return vectorDrawable;
+        return VectorDrawableCompat.create(context.getResources(), id, null);
     }
 
     public static Bitmap bitmapFromVectorDrawable(@NonNull Context context, @DrawableRes int id) {
         Drawable vectorDrawable = VectorDrawableCompat.create(context.getResources(), id, null);
-        int width = vectorDrawable.getIntrinsicWidth();
+        int width = Objects.requireNonNull(vectorDrawable).getIntrinsicWidth();
         int height = vectorDrawable.getIntrinsicHeight();
         vectorDrawable.setBounds(0, 0, width, height);
         Bitmap bm = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);

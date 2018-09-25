@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="carc_app_base_url" formatted="false">https://play.google.com/store/apps/details?id=me.carc.%s</string>
+    <string name="carc_app_base_url" formatted="true">https://play.google.com/store/apps/details?id=me.carc.%1$s</string>
 
     <string name="appTitleITimer">Interval Timer | Simple, Easy, Intuitive</string>
     <string name="appDescITimer">Interval Timer suitable for: Running, Boxing, Calisthenics, Circuit Training, HIIT, Tabata and more!</string>

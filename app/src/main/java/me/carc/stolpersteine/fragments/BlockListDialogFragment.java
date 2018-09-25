@@ -26,6 +26,8 @@ import android.widget.TextView;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -52,6 +54,7 @@ import static android.view.View.GONE;
  * Show the favorites list
  * Created by bamptonm on 31/08/2017.
  */
+@SuppressWarnings("Annotator")
 public class BlockListDialogFragment extends DialogFragment {
 
     private static final String TAG = BlockListDialogFragment.class.getName();
@@ -109,7 +112,7 @@ public class BlockListDialogFragment extends DialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimationSlide;
+        Objects.requireNonNull(getDialog().getWindow()).getAttributes().windowAnimations = R.style.DialogAnimationSlide;
     }
 
     @Override
@@ -122,7 +125,7 @@ public class BlockListDialogFragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.block_list_recyclerview_layout, container, false);
         unbinder = ButterKnife.bind(this, view);
-        view.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.md_grey_100));
+        view.setBackgroundColor(ContextCompat.getColor(Objects.requireNonNull(getActivity()), R.color.md_grey_100));
 
         Bundle args = getArguments();
         if (args != null) {
@@ -133,7 +136,7 @@ public class BlockListDialogFragment extends DialogFragment {
     }
 
     private void configRecyclerView(BoundingBox bbox){
-        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(Objects.requireNonNull(getActivity()), DividerItemDecoration.VERTICAL_LIST);
         recyclerView.addItemDecoration(itemDecoration);
 
 
@@ -187,7 +190,7 @@ public class BlockListDialogFragment extends DialogFragment {
             super.onScrolled(recyclerView, dx, dy);
             if (dy > 0) {
                 fabClose.hide();
-                AndroidUtils.hideSoftKeyboard(getActivity(), searchEditText);
+                AndroidUtils.hideSoftKeyboard(Objects.requireNonNull(getActivity()), searchEditText);
             } else
                 fabClose.show();
         }
@@ -198,12 +201,7 @@ public class BlockListDialogFragment extends DialogFragment {
     void exit() {
         ViewUtils.createAlphaAnimator(fabClose, false, getResources()
                 .getInteger(R.integer.gallery_alpha_duration) * 2)
-                .withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        dismiss();
-                    }
-                }).start();
+                .withEndAction(this::dismiss).start();
     }
 
     public void hide() {
@@ -230,13 +228,14 @@ public class BlockListDialogFragment extends DialogFragment {
         searchEditText.setText("");
         clearButton.setVisibility(View.GONE);
         // hide the keyboard ??
-        AndroidUtils.hideSoftKeyboard(getActivity(), search_appbar);
+        AndroidUtils.hideSoftKeyboard(Objects.requireNonNull(getActivity()), search_appbar);
     }
 
     @OnTextChanged(R.id.searchEditText)
     void searchEditChange(CharSequence s) {
         String newQueryText = s.toString();
         updateClearButtonVisibility(true);
+
 
         if (!Commons.isEmpty(newQueryText) && newQueryText.length() > AUTOCOMPLETE_THRESHOLD) {
             mViewModel.search(newQueryText.concat("%")).observe(this, stolpersteines -> adapter.submitList(stolpersteines));

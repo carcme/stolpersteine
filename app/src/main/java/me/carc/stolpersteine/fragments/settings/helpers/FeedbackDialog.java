@@ -14,6 +14,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.Objects;
+
 import me.carc.stolpersteine.R;
 
 /**
@@ -32,7 +34,7 @@ public class FeedbackDialog extends AppCompatDialog implements View.OnClickListe
     private FeedbackDialog(Context context, Builder builder) {
         super(context);
 
-        getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        Objects.requireNonNull(getWindow()).getAttributes().windowAnimations = R.style.DialogAnimation;
 
         this.context = context;
         this.builder = builder;

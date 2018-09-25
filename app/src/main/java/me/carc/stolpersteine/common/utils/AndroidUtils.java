@@ -19,6 +19,7 @@ import android.view.ViewParent;
 import android.view.inputmethod.InputMethodManager;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class AndroidUtils {
 
@@ -41,17 +42,14 @@ public class AndroidUtils {
 	}
 	
 	public static void softKeyboardDelayed(final View view) {
-		view.post(new Runnable() {
-			@Override
-			public void run() {
-				if (!isHardwareKeyboardAvailable(view.getContext())) {
-					InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-					if (imm != null) {
-						imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
-					}
-				}
-			}
-		});
+		view.post(() -> {
+            if (!isHardwareKeyboardAvailable(view.getContext())) {
+                InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+                }
+            }
+        });
 	}
 
 	public static void hideSoftKeyboard(final Activity activity, final View input) {
@@ -64,13 +62,17 @@ public class AndroidUtils {
 				}
 			}
 		}
+	}
 
+	public static boolean isSoftKeyboardShown(final Activity activity) {
+		InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+		return inputMethodManager != null && inputMethodManager.isAcceptingText();
 	}
 
 	static public void copyToClipboard(Context context, String text) {
 		ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
 		ClipData clip = ClipData.newPlainText("label", text);
-		clipboard.setPrimaryClip(clip);
+		Objects.requireNonNull(clipboard).setPrimaryClip(clip);
 	}
 
 	public static String formatDateMedium(Context ctx, long time) {

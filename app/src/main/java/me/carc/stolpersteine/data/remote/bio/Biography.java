@@ -24,7 +24,7 @@ public class Biography implements Parcelable {
     private List<Section> sections = null;
 
     @TypeConverters(Converters.class)
-    private HashMap<String, String> info = new HashMap<String, String>();
+    private HashMap<String, String> info = new HashMap<>();
 
     private String biographyText;
 
@@ -83,9 +83,10 @@ public class Biography implements Parcelable {
     public Biography() {
     }
 
+    @SuppressWarnings("unchecked")
     protected Biography(Parcel in) {
         this.imagesList = in.createTypedArrayList(BioImages.CREATOR);
-        this.sections = new ArrayList<Section>();
+        this.sections = new ArrayList<>();
         in.readList(this.sections, List.class.getClassLoader());
         this.info = (HashMap<String, String>) in.readSerializable();
         this.biographyText = in.readString();

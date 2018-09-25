@@ -1,3 +1,4 @@
+
 -ignorewarnings
 -keep class * {
     public private *;
@@ -38,7 +39,10 @@
 
 -dontwarn android.arch.**
 
+-dontwarn org.xmlpull.v1.**
+
 # Crashlytics
 -keepattributes *Annotation*
+-keep @**annotation** class * {*;}
 -keepattributes SourceFile,LineNumberTable
 -keep public class * extends java.lang.Exception

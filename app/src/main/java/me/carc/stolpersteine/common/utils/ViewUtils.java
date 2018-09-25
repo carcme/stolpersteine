@@ -29,6 +29,8 @@ import android.view.animation.Interpolator;
 import android.view.animation.PathInterpolator;
 import android.widget.TextView;
 
+import java.util.Objects;
+
 
 /**
  * Created by Carc.me on 05.06.16.
@@ -391,14 +393,14 @@ public class ViewUtils {
     public static Drawable changeIconColor(Context context, @DrawableRes int res, @ColorRes int color) {
         Drawable mDrawable = ContextCompat.getDrawable(context, res);
         int mColor = ContextCompat.getColor(context, color);
-        mDrawable.setColorFilter(new PorterDuffColorFilter(mColor, PorterDuff.Mode.MULTIPLY));
+        Objects.requireNonNull(mDrawable).setColorFilter(new PorterDuffColorFilter(mColor, PorterDuff.Mode.MULTIPLY));
         return mDrawable;
     }
 
     public static Drawable changeIconColor(Context context, @DrawableRes int res, String color) {
         Drawable mDrawable = ContextCompat.getDrawable(context, res);
         int mColor = Color.parseColor("#" + color);
-        mDrawable.setColorFilter(new PorterDuffColorFilter(mColor, PorterDuff.Mode.MULTIPLY));
+        Objects.requireNonNull(mDrawable).setColorFilter(new PorterDuffColorFilter(mColor, PorterDuff.Mode.MULTIPLY));
         return mDrawable;
     }
 }

@@ -34,7 +34,6 @@ public class PermissionActivity extends MvpBaseActivity {
     @Inject
     DataManager mDataMngr;
 
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {

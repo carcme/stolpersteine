@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.crashlytics.android.Crashlytics;
 
+import java.util.Objects;
+
 import javax.inject.Inject;
 
 import io.fabric.sdk.android.Fabric;
@@ -26,7 +28,6 @@ import me.carc.stolpersteine.data.db.AppDatabase;
  */
 
 public class App extends Application {
-
 
     @Inject DataManager dataManager;
 
@@ -86,7 +87,7 @@ public class App extends Application {
 
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        NetworkInfo networkInfo = Objects.requireNonNull(connectivityManager).getActiveNetworkInfo();
         return networkInfo != null && (networkInfo.isConnected());
     }
 

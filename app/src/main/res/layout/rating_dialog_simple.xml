@@ -34,7 +34,7 @@
                 android:gravity="top"
                 android:padding="10dp"
                 android:textColorHint="@color/md_grey_400"
-                android:text="Add your message here"/>
+                android:hint="@string/add_your_message_here"/>
 
         <LinearLayout
                 android:id="@+id/dlg_feedback_buttons"

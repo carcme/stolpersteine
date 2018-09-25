@@ -33,6 +33,4 @@ public class SettingsPresenter extends MvpBasePresenter<BlockViewerMvpView> {
     public void detachView() {
         super.detachView();
     }
-
-
 }

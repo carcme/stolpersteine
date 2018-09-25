@@ -23,11 +23,11 @@ public class SectionsRecyclerAdapter extends RecyclerView.Adapter<SectionsRecycl
 
     private final ArrayList<SectionsCard> list;
 
-
     public SectionsRecyclerAdapter(ArrayList<SectionsCard> tours) {
         this.list = tours;
     }
 
+    @SuppressWarnings("Annotator")
     @Override
     @NonNull public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.section_item_layout, viewGroup, false);
